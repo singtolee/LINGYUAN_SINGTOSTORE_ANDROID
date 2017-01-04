@@ -2,4 +2,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="meTab_userAvatat_height">160dp</dimen>
+    <dimen name="userAvatarSize">100dp</dimen>
+    <dimen name="fortyMargin">40dp</dimen>
+    <dimen name="thirtyMargin">30dp</dimen>
+    <dimen name="twentyMargin">20dp</dimen>
+    <dimen name="tenMargin">10dp</dimen>
+    <dimen name="userNameFontSize">16sp</dimen>
 </resources>

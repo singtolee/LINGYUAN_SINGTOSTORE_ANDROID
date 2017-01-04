@@ -1,13 +1,62 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="store.singto.singtostore.MeTab.MeTabFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="@dimen/meTab_userAvatat_height"
+        android:background="@color/colorPrimary">
+        
+        <ImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="@dimen/userAvatarSize"
+            android:layout_height="@dimen/userAvatarSize"
+            android:src="@drawable/ic_account_circle_white_48dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/twentyMargin"
+            />
+
+        <TextView
+            android:text="USER NAME"
+            android:visibility="gone"
+            android:textSize="@dimen/userNameFontSize"
+            android:textColor="@color/whiteColor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/twentyMargin"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/tenMargin"
+            android:id="@+id/userName" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/twentyMargin"
+            android:text="@string/tell_user_login"
+            android:textSize="@dimen/userNameFontSize"
+            android:textColor="@color/whiteColor"
+            android:background="@null"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/tenMargin"
+            android:id="@+id/loginRegisterBtn" />
+
+        <Button
+            android:id="@+id/exitAppBtn"
+            android:visibility="invisible"
+            android:background="@drawable/ic_exit_to_app_white_24dp"
+            android:layout_width="@dimen/thirtyMargin"
+            android:layout_height="@dimen/thirtyMargin"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/thirtyMargin"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/twentyMargin"/>
+
+
+    </RelativeLayout>
 
 </FrameLayout>
