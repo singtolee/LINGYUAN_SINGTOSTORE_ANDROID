@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1050288730700-mufvrnd952u3nf5n5c0rvb5uiqfkj8tc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "store.singto.singtostore",
+            "certificate_hash": "74754DB667D74FAC523B50199AF5ACABA7D12B53"
+          }
+        },
+        {
           "client_id": "1050288730700-0dmb38dm60am5fn75d2lqm1ejfqpmrso.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,20 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050288730700-0dmb38dm60am5fn75d2lqm1ejfqpmrso.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1050288730700-p03hphpmk3f96cmmhau917sapuev11ll.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "store.singto.Singto-s-Store"
+              }
+            }
+          ]
         },
         "ads_service": {
           "status": 2

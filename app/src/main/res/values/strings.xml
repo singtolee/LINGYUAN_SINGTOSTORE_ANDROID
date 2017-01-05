@@ -12,5 +12,9 @@
     <string name="registeraccount">REGISTER AN ACCOUNT</string>
     <string name="emailHint">Email Address</string>
     <string name="passwordlHint">Password</string>
+    <string name="invalidemail">Invalid Emaill Adreess</string>
+    <string name="passwordcannotbeempty">Password is empty</string>
+    <string name="passwordiswrong">Wrong Password</string>
+    <string name="loggingin">Logging in...</string>
 
 </resources>
