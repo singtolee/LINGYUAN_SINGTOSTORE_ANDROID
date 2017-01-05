@@ -1,5 +1,6 @@
 package store.singto.singtostore.LoginRegister;
 
+import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -37,27 +39,31 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage(getString(R.string.registering));
+                progressDialog.show();
                 String email = emailField.getText().toString().trim();
                 String password = passwordField.getText().toString().trim();
-                if(isEmail(email) && password.length()>5) {
-                    //ready to register
-                    //Toast.makeText(RegisterActivity.this, "GGOOOODDD", Toast.LENGTH_LONG).show();
+                if(Tools.isEmail(email) && password.length()>5) {
                     mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
                             if(!task.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this, "ERROR ON REGISTER", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
                             }else {
-                                Toast.makeText(RegisterActivity.this, "SUCCESSFUL", Toast.LENGTH_LONG).show();
+                                finish();
                             }
                         }
                     });
                 }else {
-                    if (!isEmail(email)){
-                        emailField.setError("Invalid Email Address");
+                    progressDialog.dismiss();
+                    if (!Tools.isEmail(email)){
+                        emailField.setError(getString(R.string.invalidemail));
                     }
                     if (password.length() <= 5){
-                        passwordField.setError("Password should longer than 5 digits");
+                        passwordField.setError(getString(R.string.passwordtooshort));
                     }
                 }
 
@@ -73,11 +79,4 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isEmail(String email){
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return false;
-        }else {
-            return true;
-        }
-    }
 }

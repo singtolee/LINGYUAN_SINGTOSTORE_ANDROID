@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button gotoRegister;
     private Button signinWithEmailandPassword;
     private Button facebookBtn;
+    private Button goTOResetPasswordActivity;
 
     private DatabaseReference mDatabase;
 
@@ -43,6 +45,15 @@ public class LoginActivity extends AppCompatActivity {
 
         emailField = (EditText) findViewById(R.id.userEmail);
         passwordField = (EditText) findViewById(R.id.userPassword);
+
+        goTOResetPasswordActivity = (Button) findViewById(R.id.forgetPasswordBtn);
+        goTOResetPasswordActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PasswordResetAvtivity.class);
+                startActivity(intent);
+            }
+        });
 
         returntoMain = (Button) findViewById(R.id.returntoMain);
         gotoRegister = (Button) findViewById(R.id.gotoRegisterBtn);
@@ -66,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailField.getText().toString().trim();
                 String password = passwordField.getText().toString().trim();
 
-                if(isEmail(email) && !password.isEmpty()) {
+                if(Tools.isEmail(email) && !password.isEmpty()) {
                     //ready to sign in
                     mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -83,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
                 }else {
                     progressDialog.dismiss();
-                    if (!isEmail(email)) {
+                    if (!Tools.isEmail(email)) {
                         emailField.setError(getString(R.string.invalidemail));
                         emailField.requestFocus();
                     }
@@ -110,13 +121,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private boolean isEmail(String email){
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return false;
-        }else {
-            return true;
-        }
     }
 }

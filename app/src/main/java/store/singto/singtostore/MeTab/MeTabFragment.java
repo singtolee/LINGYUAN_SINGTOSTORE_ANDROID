@@ -125,12 +125,12 @@ public class MeTabFragment extends Fragment {
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null) {
-                    if(dataSnapshot.child("name") != null) {
+                if(dataSnapshot.getValue() != null) {
+                    if(dataSnapshot.child("name").getValue() != null) {
                         String name = dataSnapshot.child("name").getValue().toString();
                         userName.setText(name);
                     }
-                    if(dataSnapshot.child("userAvatarUrl") != null) {
+                    if(dataSnapshot.child("userAvatarUrl").getValue() != null) {
                         String url = dataSnapshot.child("userAvatarUrl").getValue().toString();
                         Picasso.with(getActivity()).load(url).into(userAvatarImgv);
 
