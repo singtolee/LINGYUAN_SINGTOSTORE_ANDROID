@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -117,6 +116,7 @@ public class MeTabFragment extends Fragment {
         userAvatarImgv.setImageResource(R.drawable.ic_account_circle_white_48dp);
         loginRegisterBtn.setVisibility(View.VISIBLE);
         userName.setVisibility(View.GONE);
+        userName.setText(getString(R.string.defaultUserName));
         exitAppBtn.setVisibility(View.INVISIBLE);
     }
 

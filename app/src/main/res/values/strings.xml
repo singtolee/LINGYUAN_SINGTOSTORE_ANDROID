@@ -2,6 +2,7 @@
     <string name="app_name">SingtoStore</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="facebook_app_id">1275354099152439</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tell_user_login">LOGIN OR REGISTER</string>
     <string name="login">LOGIN</string>
@@ -21,5 +22,6 @@
     <string name="passwordtooshort">At least 6 digits</string>
     <string name="sendresetpasswordemail">SEND RESET PASSWORD EMAIL</string>
     <string name="resetpasswordemailwassent">Reset password email was sent,check you inbox.</string>
+    <string name="defaultUserName">USER NAME</string>
 
 </resources>
