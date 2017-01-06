@@ -1,16 +1,16 @@
 package store.singto.singtostore.MeTab;
 
-import android.content.Context;
-import android.support.v4.app.NavUtils;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import store.singto.singtostore.R;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -40,7 +39,6 @@ public class UserProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setupView();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,6 +65,27 @@ public class UserProfileActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.userProfileRecycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new ProfileAdapter();
+        mAdapter.setOnItemClickListener(new ProfileAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int index) {
+                switch (index){
+                    case 0:
+                        break;
+                    case 1:
+                        Intent intent = new Intent(UserProfileActivity.this, EditUserNameActivity.class);
+                        intent.putExtra("name", info.get(1));
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        Intent i = new Intent(UserProfileActivity.this, EditUserPhoneActivity.class);
+                        i.putExtra("phone", info.get(2));
+                        startActivity(i);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         recyclerView.setAdapter(mAdapter);
 
         listener = new ValueEventListener() {
@@ -109,16 +128,33 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.userProfileItem.setText(items.get(position));
             holder.userProfileItemDetail.setText(info.get(position));
+            if(itemClickListener!=null){
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int index = holder.getLayoutPosition();
+                        itemClickListener.onItemClick(holder.itemView, index);
+                    }
+                });
+            }
         }
-
-
         @Override
         public int getItemCount() {
             return items.size();
         }
+
+        public interface OnItemClickListener{
+            void onItemClick(View view, int index);
+        }
+
+        private OnItemClickListener itemClickListener;
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+            this.itemClickListener = onItemClickListener;
+        }
+
     }
 
     @Override

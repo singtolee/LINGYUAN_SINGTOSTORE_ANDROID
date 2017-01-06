@@ -25,7 +25,9 @@
         <activity android:name=".LoginRegister.LoginActivity" />
         <activity android:name=".LoginRegister.RegisterActivity" />
         <activity android:name=".LoginRegister.PasswordResetAvtivity" />
-        <activity android:name=".MeTab.UserProfileActivity"></activity>
+        <activity android:name=".MeTab.UserProfileActivity" />
+        <activity android:name=".MeTab.EditUserNameActivity" />
+        <activity android:name=".MeTab.EditUserPhoneActivity"></activity>
     </application>
 
 </manifest>

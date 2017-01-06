@@ -23,6 +23,12 @@
     <string name="sendresetpasswordemail">SEND RESET PASSWORD EMAIL</string>
     <string name="resetpasswordemailwassent">Reset password email was sent,check you inbox.</string>
     <string name="defaultUserName">USER NAME</string>
+    <string name="namehint">Name</string>
+    <string name="phonehint">Phone Number</string>
     <string name="goback">BACK</string>
+    <string name="updateusername">UPDATE</string>
+    <string name="namecannotbeempty">Name is empty</string>
+    <string name="phonenumberistendigits">Invalid Phone Number</string>
+    <string name="updating">Updating...</string>
 
 </resources>
