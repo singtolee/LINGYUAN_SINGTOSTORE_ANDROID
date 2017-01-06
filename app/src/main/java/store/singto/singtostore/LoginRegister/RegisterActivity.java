@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             progressDialog.dismiss();
                             if(!task.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                emailField.setError(task.getException().getLocalizedMessage());
                             }else {
                                 finish();
                             }

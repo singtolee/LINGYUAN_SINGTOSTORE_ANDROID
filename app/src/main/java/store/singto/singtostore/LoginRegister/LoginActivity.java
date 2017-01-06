@@ -1,6 +1,7 @@
 package store.singto.singtostore.LoginRegister;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -32,13 +33,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.SaveEmailPassword;
 import store.singto.singtostore.Tools.Tools;
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+
+    private SaveEmailPassword ep;
+    private Context context;
 
     private LoginManager loginManager;
     private CallbackManager callbackManager;
@@ -61,6 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        context = getApplicationContext();
+        ep = new SaveEmailPassword(context);
+
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage(getString(R.string.loggingin));
@@ -69,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         loginManager = LoginManager.getInstance();
+        loginManager.logOut();
         callbackManager = CallbackManager.Factory.create();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -123,8 +133,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                String email = emailField.getText().toString().trim();
-                String password = passwordField.getText().toString().trim();
+                final String email = emailField.getText().toString().trim();
+                final String password = passwordField.getText().toString().trim();
 
                 if(Tools.isEmail(email) && !password.isEmpty()) {
                     //ready to sign in
@@ -133,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 progressDialog.dismiss();
+                                ep.save(email,password);
                                 finish();
                             }else {
                                 progressDialog.dismiss();
@@ -170,6 +181,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Map<String,String> data = ep.read();
+        emailField.setText(data.get("email"));
+        passwordField.setText(data.get("password"));
     }
 
     @Override
@@ -211,7 +230,12 @@ public class LoginActivity extends AppCompatActivity {
                                 if(url!=null){
                                     info.put("userAvatarUrl",url);
                                 }
-                                mDatabase.child("users").child(user.getUid()).child("USERINFO").setValue(info);
+                                mDatabase.child("users").child(user.getUid()).child("USERINFO").setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        finish();
+                                    }
+                                });
                                 progressDialog.dismiss();
                             }
                         }

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,8 @@ public class MeTabFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
+    private LoginManager loginManager;
+
     private Button loginRegisterBtn, exitAppBtn;
     private ImageView userAvatarImgv;
     private TextView userName;
@@ -55,6 +58,7 @@ public class MeTabFragment extends Fragment {
         userName = (TextView) view.findViewById(R.id.userName);
         loginRegisterBtn = (Button) view.findViewById(R.id.loginRegisterBtn);
         exitAppBtn = (Button) view.findViewById(R.id.exitAppBtn);
+        loginManager = LoginManager.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -75,6 +79,7 @@ public class MeTabFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //logout , clean userAvatar, name, hide exitAppBtn, hide userName
+                loginManager.logOut();
                 mAuth.signOut();
             }
         });
