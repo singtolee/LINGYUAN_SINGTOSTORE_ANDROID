@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setElevation(0);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_bar);
         bottomNavigationView.inflateMenu(R.menu.menu);

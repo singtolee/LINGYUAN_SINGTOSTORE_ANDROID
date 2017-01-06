@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/story_Tab"
         android:icon="@drawable/ic_color_lens_white_24dp"
         android:enabled="true"
+        app:showAsAction="always"
         android:title="Story" />
     <item
         android:id="@+id/product_Tab"
         android:icon="@drawable/ic_local_offer_white_24dp"
         android:enabled="true"
+        app:showAsAction="always"
         android:title="Product" />
     <item
         android:id="@+id/cart_Tab"
         android:icon="@drawable/ic_shopping_cart_white_24dp"
         android:enabled="true"
+        app:showAsAction="always"
         android:title="Cart" />
     <item
         android:id="@+id/me_Tab"
         android:icon="@drawable/ic_account_box_white_24dp"
         android:enabled="true"
+        app:showAsAction="always"
         android:title="Me" />
 </menu>

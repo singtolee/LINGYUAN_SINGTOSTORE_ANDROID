@@ -51,7 +51,11 @@ public class MeTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_me_tab, container, false);
+        setupView(view);
+        return view;
+    }
 
+    private void setupView(View view){
         mAuth = FirebaseAuth.getInstance();
 
         userAvatarImgv = (ImageView) view.findViewById(R.id.userAvatar);
@@ -59,6 +63,24 @@ public class MeTabFragment extends Fragment {
         loginRegisterBtn = (Button) view.findViewById(R.id.loginRegisterBtn);
         exitAppBtn = (Button) view.findViewById(R.id.exitAppBtn);
         loginManager = LoginManager.getInstance();
+
+        userAvatarImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //go to edit user profile
+                if(mAuth.getCurrentUser()!=null){
+                    Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -93,7 +115,6 @@ public class MeTabFragment extends Fragment {
             }
         });
 
-        return view;
     }
 
     @Override

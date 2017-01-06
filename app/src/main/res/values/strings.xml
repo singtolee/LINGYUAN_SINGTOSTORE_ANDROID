@@ -23,5 +23,6 @@
     <string name="sendresetpasswordemail">SEND RESET PASSWORD EMAIL</string>
     <string name="resetpasswordemailwassent">Reset password email was sent,check you inbox.</string>
     <string name="defaultUserName">USER NAME</string>
+    <string name="goback">BACK</string>
 
 </resources>
