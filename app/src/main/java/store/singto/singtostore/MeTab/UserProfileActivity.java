@@ -70,6 +70,8 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onItemClick(View view, int index) {
                 switch (index){
                     case 0:
+                        Intent intent1 = new Intent(UserProfileActivity.this, EditUserAvatarActivity.class);
+                        startActivity(intent1);
                         break;
                     case 1:
                         Intent intent = new Intent(UserProfileActivity.this, EditUserNameActivity.class);

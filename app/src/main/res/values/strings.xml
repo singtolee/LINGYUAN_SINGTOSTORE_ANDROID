@@ -27,6 +27,7 @@
     <string name="phonehint">Phone Number</string>
     <string name="goback">BACK</string>
     <string name="updateusername">UPDATE</string>
+    <string name="upload">UPLOAD</string>
     <string name="namecannotbeempty">Name is empty</string>
     <string name="phonenumberistendigits">Invalid Phone Number</string>
     <string name="updating">Updating...</string>

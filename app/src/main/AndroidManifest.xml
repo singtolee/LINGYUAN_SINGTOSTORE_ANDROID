@@ -3,6 +3,7 @@
     package="store.singto.singtostore">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".Tools.Singto"
@@ -22,12 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity android:name=".LoginRegister.LoginActivity" />
         <activity android:name=".LoginRegister.RegisterActivity" />
         <activity android:name=".LoginRegister.PasswordResetAvtivity" />
         <activity android:name=".MeTab.UserProfileActivity" />
         <activity android:name=".MeTab.EditUserNameActivity" />
-        <activity android:name=".MeTab.EditUserPhoneActivity"></activity>
+        <activity android:name=".MeTab.EditUserPhoneActivity" />
+        <activity android:name=".MeTab.EditUserAvatarActivity"></activity>
     </application>
 
 </manifest>
