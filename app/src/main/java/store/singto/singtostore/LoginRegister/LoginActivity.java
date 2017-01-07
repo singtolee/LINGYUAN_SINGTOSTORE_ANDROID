@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private Button returntoMain;
     private Button gotoRegister;
     private Button signinWithEmailandPassword;
     private Button facebookBtn;
@@ -66,6 +66,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         FacebookSdk.sdkInitialize(getApplicationContext());
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         context = getApplicationContext();
         ep = new SaveEmailPassword(context);
@@ -117,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        returntoMain = (Button) findViewById(R.id.returntoMain);
         gotoRegister = (Button) findViewById(R.id.gotoRegisterBtn);
         facebookBtn = (Button) findViewById(R.id.loginwithfacebookBtn);
         facebookBtn.setOnClickListener(new View.OnClickListener() {
@@ -163,13 +165,6 @@ public class LoginActivity extends AppCompatActivity {
                         passwordField.requestFocus();
                     }
                 }
-            }
-        });
-
-        returntoMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
 
@@ -250,5 +245,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

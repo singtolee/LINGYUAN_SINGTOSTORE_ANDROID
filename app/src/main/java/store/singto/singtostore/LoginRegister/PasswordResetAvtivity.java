@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +19,6 @@ import store.singto.singtostore.R;
 import store.singto.singtostore.Tools.Tools;
 
 public class PasswordResetAvtivity extends AppCompatActivity {
-    private Button dismissSelfBtn;
     private EditText emailField;
     private Button sendEmailBtn;
     private CoordinatorLayout coordinatorLayout;
@@ -26,6 +26,8 @@ public class PasswordResetAvtivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setContentView(R.layout.activity_password_reset_avtivity);
 
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.activity_password_reset_avtivity);
@@ -68,13 +70,14 @@ public class PasswordResetAvtivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        dismissSelfBtn = (Button) findViewById(R.id.dismissResetPasswordPageBtn);
-        dismissSelfBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

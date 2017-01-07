@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import store.singto.singtostore.Tools.Tools;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    private Button returnLogin, registerBtn;
+    private Button registerBtn;
     private EditText emailField, passwordField;
 
     @Override
@@ -28,12 +29,14 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mAuth = FirebaseAuth.getInstance();
 
         emailField = (EditText) findViewById(R.id.userEmailforRegister);
         passwordField = (EditText) findViewById(R.id.userPasswordforRegister);
 
-        returnLogin = (Button) findViewById(R.id.returntoLogin);
         registerBtn = (Button) findViewById(R.id.registerWithEmailBtn);
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -71,12 +74,15 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        returnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
