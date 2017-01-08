@@ -1,13 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="store.singto.singtostore.ProductTab.ProductTabFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.design.widget.TabLayout
+        android:layout_alignParentTop="true"
+        android:id="@+id/categoryTab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="THIS IS PRODUCT TAB" />
+        android:layout_height="@dimen/thirtyMargin"
+        android:background="@color/lightgray"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"/>
+    <com.wang.avi.AVLoadingIndicatorView
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loadingIndicator"
+        style="@style/AVLoadingIndicatorView.Small"
+        app:indicatorColor="@color/colorPrimary"
+        app:indicatorName="BallPulseSyncIndicator"/>
 
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/thirtyMargin"
+        android:id="@+id/prdViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
+
+</RelativeLayout>
