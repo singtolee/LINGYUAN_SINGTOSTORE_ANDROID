@@ -1,7 +1,10 @@
 package store.singto.singtostore.MeTab;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,17 +14,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-
 import store.singto.singtostore.R;
 
 public class EditUserAvatarActivity extends AppCompatActivity {
@@ -32,12 +41,23 @@ public class EditUserAvatarActivity extends AppCompatActivity {
     private ValueEventListener listener;
     private Button uploadBtn;
 
+    private FirebaseStorage storage;
+    private StorageReference reference;
+
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_avatar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        storage = FirebaseStorage.getInstance();
+        reference = storage.getReference().child("USERPROFILEPHOTO");
+
+        progressDialog = new ProgressDialog(EditUserAvatarActivity.this);
+        progressDialog.setMessage(getString(R.string.updating));
 
         uploadBtn = (Button)findViewById(R.id.uploadAvatar);
         uploadBtn.setVisibility(View.INVISIBLE);
@@ -121,6 +141,39 @@ public class EditUserAvatarActivity extends AppCompatActivity {
     }
 
     private void uploadImg(){
+        progressDialog.show();
         uploadBtn.setVisibility(View.INVISIBLE);
+        if(auth.getCurrentUser().getUid()!=null){
+            final String uid = auth.getCurrentUser().getUid();
+            String p = uid + ".png";
+            StorageReference avatarRef = reference.child(p);
+            largeAvatar.setDrawingCacheEnabled(true);
+            largeAvatar.buildDrawingCache();
+            Bitmap bitmap = largeAvatar.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 20,baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = avatarRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //failed to upload
+                    progressDialog.dismiss();
+                    Toast.makeText(EditUserAvatarActivity.this, e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //success
+                    String url = taskSnapshot.getDownloadUrl().toString();
+                    //save this url to USERINFO
+                    databaseReference.child(uid).child("USERINFO").child("userAvatarUrl").setValue(url);
+                    progressDialog.dismiss();
+                }
+            });
+        }else {
+            progressDialog.dismiss();
+            //could not find user
+        }
     }
 }

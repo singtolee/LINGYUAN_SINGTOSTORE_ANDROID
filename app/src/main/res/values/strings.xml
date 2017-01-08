@@ -18,6 +18,7 @@
     <string name="passwordiswrong">Wrong Password</string>
     <string name="loggingin">Logging in...</string>
     <string name="registering">Registering...</string>
+    <string name="uploading">Uploading...</string>
     <string name="sendingresetpasswordemail">Sending reset password email...</string>
     <string name="passwordtooshort">At least 6 digits</string>
     <string name="sendresetpasswordemail">SEND RESET PASSWORD EMAIL</string>
