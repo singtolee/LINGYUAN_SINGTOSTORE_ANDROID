@@ -53,6 +53,7 @@ public class ProductTabFragment extends Fragment {
         indicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.loadingIndicator);
 
         viewPager = (ViewPager) view.findViewById(R.id.prdViewPager);
+        viewPager.setOffscreenPageLimit(3); //cache 123A321 pages
         categoryTab = (TabLayout) view.findViewById(R.id.categoryTab);
         categoryTab.setupWithViewPager(viewPager);
         reference = FirebaseDatabase.getInstance().getReference().child("ProductCategory");
@@ -64,7 +65,9 @@ public class ProductTabFragment extends Fragment {
                 for(DataSnapshot snap: dataSnapshot.getChildren()){
                     String cate = snap.getValue().toString();
                     categories.add(cate);
-                    adapter.addFragment(new OneCategoryPrdFragment(),cate);
+                    OneCategoryPrdFragment aa = new OneCategoryPrdFragment();
+                    aa.category = cate;
+                    adapter.addFragment(aa, cate);
                 }
                 viewPager.setAdapter(adapter);
                 indicatorView.hide();
