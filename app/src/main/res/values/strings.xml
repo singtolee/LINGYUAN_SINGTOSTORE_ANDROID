@@ -32,5 +32,13 @@
     <string name="namecannotbeempty">Name is empty</string>
     <string name="phonenumberistendigits">Invalid Phone Number</string>
     <string name="updating">Updating...</string>
+    <string name="addtocart">ADD TO CART</string>
+    <string name="buynow">BUY NOW</string>
+    <string name="freeshipping"> FREE DELIVERY</string>
+    <string name="shippingfast"> SHIPPING WITHIN 7 DAYS</string>
+    <string name="cod"> CASH ON DELIVERY(BANGKOK SELECTED AREA)</string>
+    <string name="refundable"> REFUNDABLE WITHIN 7 DAYS</string>
+    <string name="nonrefundable"> FOOD, NON-REFUNDABLE</string>
+
 
 </resources>

@@ -4,16 +4,21 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="meTab_userAvatat_height">140dp</dimen>
     <dimen name="sixdp">6dp</dimen>
+    <dimen name="minus25dp">-25dp</dimen>
     <dimen name="userAvatarSize">100dp</dimen>
     <dimen name="threehunder">300dp</dimen>
     <dimen name="sixtydp">60dp</dimen>
     <dimen name="fiftydp">50dp</dimen>
     <dimen name="fortyMargin">40dp</dimen>
     <dimen name="thirtyMargin">30dp</dimen>
+    <dimen name="thirtyonedp">19dp</dimen>
     <dimen name="twentyMargin">20dp</dimen>
+    <dimen name="twentyfivedp">25dp</dimen>
     <dimen name="tenMargin">10dp</dimen>
     <dimen name="userNameFontSize">16sp</dimen>
+    <dimen name="fourdp">4dp</dimen>
     <dimen name="shortprdcellNameandpricetextSize">14sp</dimen>
     <dimen name="shortprdcellSubtextSize">12sp</dimen>
     <dimen name="onedp">1dp</dimen>
+    <dimen name="twodp">2dp</dimen>
 </resources>

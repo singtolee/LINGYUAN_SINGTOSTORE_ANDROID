@@ -3,7 +3,7 @@
     package="store.singto.singtostore">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Tools.Singto"
@@ -30,7 +30,8 @@
         <activity android:name=".MeTab.UserProfileActivity" />
         <activity android:name=".MeTab.EditUserNameActivity" />
         <activity android:name=".MeTab.EditUserPhoneActivity" />
-        <activity android:name=".MeTab.EditUserAvatarActivity"></activity>
+        <activity android:name=".MeTab.EditUserAvatarActivity" />
+        <activity android:name=".ProductTab.DetailPrdActivity"></activity>
     </application>
 
 </manifest>

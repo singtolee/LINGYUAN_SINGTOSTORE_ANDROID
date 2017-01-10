@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_detail_prd"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="store.singto.singtostore.ProductTab.DetailPrdActivity">
+
+    <ScrollView
+        android:layout_alignParentTop="true"
+        android:id="@+id/detailPrdScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:background="@color/lightgray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/prdImgsCarousel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.daimajia.slider.library.SliderLayout>
+            <com.daimajia.slider.library.Indicators.PagerIndicator
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/minus25dp"
+                android:id="@+id/carouselPagerIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:selected_color="@color/colorPrimary"
+                app:unselected_color="@color/lightgray"
+                app:shape="oval"
+                app:selected_width="@dimen/sixdp"
+                app:unselected_width="@dimen/sixdp"
+                app:selected_height="@dimen/sixdp"
+                app:unselected_height="@dimen/sixdp">
+
+            </com.daimajia.slider.library.Indicators.PagerIndicator>
+            <TextView
+                android:background="@color/whiteColor"
+                android:textSize="@dimen/userNameFontSize"
+                android:layout_marginTop="@dimen/thirtyonedp"
+                android:paddingLeft="@dimen/tenMargin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/thirtyMargin"
+                android:id="@+id/detailPrdName"/>
+            <TextView
+                android:background="@color/whiteColor"
+                android:textSize="@dimen/userNameFontSize"
+                android:paddingLeft="@dimen/tenMargin"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/twentyfivedp"
+                android:id="@+id/detailPrdPricce"/>
+            <TextView
+                android:background="@color/whiteColor"
+                android:textSize="@dimen/shortprdcellNameandpricetextSize"
+                android:paddingLeft="@dimen/tenMargin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fortyMargin"
+                android:id="@+id/detailPrdSub"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@color/whiteColor"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:id="@+id/commintmentspart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:background="@color/whiteColor"
+                    android:id="@+id/freeshipping"
+                    android:paddingLeft="@dimen/tenMargin"
+                    android:text="@string/freeshipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/twentyMargin"
+                    android:textSize="@dimen/shortprdcellSubtextSize"/>
+
+                <TextView
+                    android:background="@color/whiteColor"
+                    android:id="@+id/shippingfast"
+                    android:paddingLeft="@dimen/tenMargin"
+                    android:text="@string/shippingfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/twentyMargin"
+                    android:textSize="@dimen/shortprdcellSubtextSize"/>
+
+                <TextView
+                    android:background="@color/whiteColor"
+                    android:id="@+id/cod"
+                    android:paddingLeft="@dimen/tenMargin"
+                    android:text="@string/cod"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/twentyMargin"
+                    android:textSize="@dimen/shortprdcellSubtextSize"/>
+
+                <TextView
+                    android:background="@color/whiteColor"
+                    android:id="@+id/refundable"
+                    android:paddingLeft="@dimen/tenMargin"
+                    android:text="@string/refundable"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/twentyMargin"
+                    android:textSize="@dimen/shortprdcellSubtextSize"/>
+                <TextView
+                    android:background="@color/whiteColor"
+                    android:id="@+id/nonRefundable"
+                    android:paddingLeft="@dimen/tenMargin"
+                    android:text="@string/nonrefundable"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/twentyMargin"
+                    android:textSize="@dimen/shortprdcellSubtextSize"/>
+
+            </LinearLayout>
+
+
+            <ListView
+                android:background="@color/whiteColor"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/prdCSListView">
+            </ListView>
+
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/twodp"
+        android:background="@color/lightgray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fiftydp"
+        android:orientation="horizontal">
+        <ImageView
+            android:src="@drawable/ic_favorite_border_white_24dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/fourdp"
+            android:tint="@color/colorPrimary"
+            android:id="@+id/likeBtn" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/fourdp"
+            android:layout_weight="1"
+            android:background="@drawable/roundedcorner"
+            android:text="@string/addtocart"
+            android:textColor="@color/whiteColor"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="@dimen/fourdp"
+            android:textColor="@color/whiteColor"
+            android:background="@drawable/roundedcorner"
+            android:text="@string/buynow"/>
+    </LinearLayout>
+</RelativeLayout>

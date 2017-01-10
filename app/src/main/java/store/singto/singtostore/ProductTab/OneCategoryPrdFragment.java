@@ -1,11 +1,11 @@
 package store.singto.singtostore.ProductTab;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -24,7 +24,6 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import store.singto.singtostore.R;
 
 /**
@@ -59,11 +58,8 @@ public class OneCategoryPrdFragment extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference().child("Each_Category").child(category);
         prds = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.shortPrdRecycleView);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         recyclerView.addItemDecoration(new SpacesItemDecoration(12));
-        //adapter = new ShortPrdAdapter(getContext(),prds);
-        //recyclerView.setAdapter(adapter);
         listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -75,10 +71,15 @@ public class OneCategoryPrdFragment extends Fragment {
                 prd.prdPrice = dataSnapshot.child("productPrice").getValue().toString();
                 prd.prdSub = dataSnapshot.child("productSubDetail").getValue().toString();
                 prds.add(0,prd);
-                //System.out.println(prds.size());
-                //adapter.notifyItemInserted(0);
-                //adapter.notifyDataSetChanged();
                 adapter = new ShortPrdAdapter(getContext(),prds);
+                adapter.setOnItemClickListener(new ShortPrdAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int index) {
+                        Intent intent = new Intent(getActivity(), DetailPrdActivity.class);
+                        intent.putExtra("prdKey", prds.get(index).prdKey);
+                        startActivity(intent);
+                    }
+                });
                 recyclerView.setAdapter(adapter);
                 indicatorView.hide();
             }
@@ -154,7 +155,7 @@ public class OneCategoryPrdFragment extends Fragment {
             holder.name.setText(p.prdName);
             holder.sub.setText(p.prdSub);
             holder.price.setText("THB "+p.prdPrice+".0");
-            Picasso.with(context).load(p.imgUrl).into(holder.mainImg);
+            Picasso.with(context).load(p.imgUrl).placeholder(R.drawable.placeholder).into(holder.mainImg);
 
             if(itemClickListener!=null){
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -196,13 +197,6 @@ public class OneCategoryPrdFragment extends Fragment {
             outRect.left = space;
             outRect.right = space/2;
             outRect.bottom = space/2;
-
-            // Add top margin only for the first item to avoid double space between items
-//            if (parent.getChildLayoutPosition(view) == 0) {
-//                outRect.top = space;
-//            } else {
-//                outRect.top = 0;
-//            }
         }
     }
 }
