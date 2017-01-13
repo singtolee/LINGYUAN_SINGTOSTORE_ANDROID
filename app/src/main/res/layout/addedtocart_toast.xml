@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/addedtocarttoastcontainer"
+    app:cardBackgroundColor="@color/transblack"
+    app:cardCornerRadius="@dimen/sixdp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:paddingTop="@dimen/sixdp"
+            android:paddingBottom="@dimen/sixdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_shopping_cart_white_24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/tenMargin"
+            android:paddingRight="@dimen/tenMargin"
+            android:paddingBottom="@dimen/sixdp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/whiteColor"
+            android:textAlignment="center"
+            android:text="@string/addedtocart"/>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

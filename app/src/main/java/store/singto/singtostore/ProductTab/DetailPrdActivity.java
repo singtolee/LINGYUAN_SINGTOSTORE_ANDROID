@@ -4,41 +4,53 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
+import store.singto.singtostore.LoginRegister.LoginActivity;
 import store.singto.singtostore.R;
 import store.singto.singtostore.Tools.MyGridView;
 
 public class DetailPrdActivity extends AppCompatActivity {
     private String prdKey;
-    private DatabaseReference reference;
+    private DetailPrd product;
+    private int csID = 0;
+    private DatabaseReference reference, ref;
     private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authStateListener;
     private ValueEventListener listener;
     private SliderLayout carousel;
     private Point size;
@@ -48,6 +60,8 @@ public class DetailPrdActivity extends AppCompatActivity {
     private TextView freeshipping, shippingTime,cod,refundable, nonrefundable;
     private MyGridView prdCSListView, prdInfoImgGridView;
     private View endView;
+    private ImageView likeBtn;
+    private Button cartBtn, buyBtn;
 
     //variables for gridview
     TextView GridViewItems, BackSelectedItem;
@@ -66,8 +80,37 @@ public class DetailPrdActivity extends AppCompatActivity {
         ssh = size.y;
         Intent i = getIntent();
         prdKey = i.getStringExtra("prdKey");
+        setUpUI();
         reference = FirebaseDatabase.getInstance().getReference().child("AllProduct").child(prdKey);
+        ref = FirebaseDatabase.getInstance().getReference().child("users");
         auth = FirebaseAuth.getInstance();
+        authStateListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user!=null){
+                    String uid = user.getUid();
+                    ref.child(uid).child("FavoritePRD").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.hasChild(prdKey)){
+                                //set like btn
+                                likeBtn.setImageResource(R.drawable.ic_favorite_white_24dp);
+
+                            }else {
+                                //set normal btn
+                                likeBtn.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        };
         listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,7 +141,9 @@ public class DetailPrdActivity extends AppCompatActivity {
 //                        prd.prdCSQty.clear();
 //                    }
                     prd.prdCSQty = (List<String>) dataSnapshot.child("prodcutCSQty").getValue();
-                    setUpUI();
+                    //setUpUI();
+                    product = new DetailPrd();
+                    product = prd;
                     updateUI(prd);
                 }
 
@@ -110,6 +155,7 @@ public class DetailPrdActivity extends AppCompatActivity {
             }
         };
 
+        //load prd by prdkey
         reference.addValueEventListener(listener);
 
 
@@ -127,6 +173,7 @@ public class DetailPrdActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        auth.addAuthStateListener(authStateListener);
         //reference.addValueEventListener(listener);
         //carousel.stopAutoCycle();
     }
@@ -134,6 +181,10 @@ public class DetailPrdActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        System.out.println("SINGTO OUT");
+        if(authStateListener!=null){
+            auth.removeAuthStateListener(authStateListener);
+        }
         //carousel.stopAutoCycle();
         //reference.removeEventListener(listener);
     }
@@ -148,6 +199,7 @@ public class DetailPrdActivity extends AppCompatActivity {
             c.image(url);
             carousel.addSlider(c);
         }
+        carousel.stopAutoCycle();
 
         title.setText(prd.prdName);
         price.setText("THB "+prd.prdPrice+".0");
@@ -181,6 +233,7 @@ public class DetailPrdActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //selectedItem = parent.getItemAtPosition(position).toString();
                 //de select all
+                csID = position;
                 for(int i=0;i<prd.prdCS.size();i++){
                     BackSelectedItem = (TextView) prdCSListView.getChildAt(i);
                     BackSelectedItem.setBackgroundColor(getColor(R.color.whiteColor));
@@ -188,6 +241,7 @@ public class DetailPrdActivity extends AppCompatActivity {
                     BackSelectedItem.setSelected(false);
                 }
                 //select at clicked position
+                view.setSelected(true);
                 GridViewItems = (TextView) view;
                 GridViewItems.setSelected(true);
                 GridViewItems.setBackgroundColor(getColor(R.color.colorPrimary));
@@ -212,7 +266,6 @@ public class DetailPrdActivity extends AppCompatActivity {
         sub.setEllipsize(TextUtils.TruncateAt.END);
 
         commitmentsPart = (LinearLayout)findViewById(R.id.commintmentspart);
-        //commitmentsPart.setVisibility(View.INVISIBLE);
 
         freeshipping = (TextView)findViewById(R.id.freeshipping);
         shippingTime = (TextView)findViewById(R.id.shippingfast);
@@ -223,6 +276,75 @@ public class DetailPrdActivity extends AppCompatActivity {
         prdInfoImgGridView = (MyGridView) findViewById(R.id.prdInfoImgs);
 
         endView = findViewById(R.id.thisisendview);
+
+        likeBtn = (ImageView) findViewById(R.id.likeBtn);
+        cartBtn = (Button)findViewById(R.id.addToCartBtn);
+        cartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(auth.getCurrentUser()!=null){
+                    String uid = auth.getCurrentUser().getUid();
+                    //add to cart
+                    CartPrd cart = new CartPrd();
+                    cart.ID = csID;
+                    cart.Check = true;
+                    cart.Qty = 1;
+                    cart.prdCS = product.prdCS.get(csID);
+                    cart.prdImg = product.prdImages.get(csID);
+                    cart.prdKey = prdKey;
+                    cart.prdTitle = product.prdName;
+                    cart.prdPrice = Integer.parseInt(product.prdPrice);
+                    String kk = ref.child(uid).child("SHOPPINGCART").push().getKey();
+                    ref.child(uid).child("SHOPPINGCART").child(kk).setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                cartToast();
+                            }else {
+                                //try again
+                                Toast.makeText(getApplicationContext(),task.getException().getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                }else {
+                    Intent intent= new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
+        buyBtn = (Button)findViewById(R.id.buyNowBtn);
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(auth.getCurrentUser()!=null){
+                    //add this prd to favorite folder
+                    final String uid = auth.getCurrentUser().getUid();
+                    ref.child(uid).child("FavoritePRD").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.hasChild(prdKey)){
+                                ref.child(uid).child("FavoritePRD").child(prdKey).setValue(null);
+                                makeToast("REMOVED");
+                            }else {
+                                ref.child(uid).child("FavoritePRD").child(prdKey).setValue(true);
+                                makeToast("LIKED");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }else {
+                    //tell user to login
+                    Intent intent= new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
     public class InfoAdapter extends BaseAdapter{
@@ -308,4 +430,28 @@ public class DetailPrdActivity extends AppCompatActivity {
 
 
     }
+
+    private void makeToast(String a){
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.like_toast,(ViewGroup) findViewById(R.id.likeToastContainer));
+        TextView textView = (TextView)layout.findViewById(R.id.likeordislike);
+        textView.setText(a);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, -ssw/3, ssw/2);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
+
+    private void cartToast(){
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.addedtocart_toast,(ViewGroup) findViewById(R.id.addedtocarttoastcontainer));
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, ssw/2);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
+
 }
+

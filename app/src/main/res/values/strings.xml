@@ -33,6 +33,7 @@
     <string name="phonenumberistendigits">Invalid Phone Number</string>
     <string name="updating">Updating...</string>
     <string name="addtocart">ADD TO CART</string>
+    <string name="addedtocart">ADDED TO CART</string>
     <string name="buynow">BUY NOW</string>
     <string name="freeshipping"> FREE DELIVERY</string>
     <string name="shippingfast"> SHIPPING WITHIN 7 DAYS</string>

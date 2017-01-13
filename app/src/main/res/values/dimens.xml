@@ -21,4 +21,5 @@
     <dimen name="shortprdcellSubtextSize">12sp</dimen>
     <dimen name="onedp">1dp</dimen>
     <dimen name="twodp">2dp</dimen>
+    <dimen name="zerodp">0dp</dimen>
 </resources>

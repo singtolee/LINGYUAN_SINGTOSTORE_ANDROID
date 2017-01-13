@@ -164,6 +164,7 @@
             android:tint="@color/colorPrimary"
             android:id="@+id/likeBtn" />
         <Button
+            android:id="@+id/addToCartBtn"
             android:layout_width="0dp"
             android:layout_marginTop="@dimen/twodp"
             android:layout_marginBottom="@dimen/twodp"
@@ -174,6 +175,7 @@
             android:text="@string/addtocart"
             android:textColor="@color/whiteColor"/>
         <Button
+            android:id="@+id/buyNowBtn"
             android:layout_marginTop="@dimen/twodp"
             android:layout_marginBottom="@dimen/twodp"
             android:layout_width="0dp"
