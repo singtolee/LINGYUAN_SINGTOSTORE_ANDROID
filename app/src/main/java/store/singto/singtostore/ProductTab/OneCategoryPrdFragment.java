@@ -60,10 +60,19 @@ public class OneCategoryPrdFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.shortPrdRecycleView);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         recyclerView.addItemDecoration(new SpacesItemDecoration(12));
+        adapter = new ShortPrdAdapter(getContext(),prds);
+        adapter.setOnItemClickListener(new ShortPrdAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int index) {
+                Intent intent = new Intent(getActivity(), DetailPrdActivity.class);
+                intent.putExtra("prdKey", prds.get(index).prdKey);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(adapter);
         listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                // here create a list with the name of category
                 ShortPrd prd = new ShortPrd();
                 prd.prdKey = dataSnapshot.getKey();
                 prd.imgUrl = dataSnapshot.child("productMainImage").getValue().toString();
@@ -71,16 +80,7 @@ public class OneCategoryPrdFragment extends Fragment {
                 prd.prdPrice = dataSnapshot.child("productPrice").getValue().toString();
                 prd.prdSub = dataSnapshot.child("productSubDetail").getValue().toString();
                 prds.add(0,prd);
-                adapter = new ShortPrdAdapter(getContext(),prds);
-                adapter.setOnItemClickListener(new ShortPrdAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int index) {
-                        Intent intent = new Intent(getActivity(), DetailPrdActivity.class);
-                        intent.putExtra("prdKey", prds.get(index).prdKey);
-                        startActivity(intent);
-                    }
-                });
-                recyclerView.setAdapter(adapter);
+                adapter.notifyItemInserted(0);
                 indicatorView.hide();
             }
 

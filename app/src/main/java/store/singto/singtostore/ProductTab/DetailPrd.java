@@ -18,18 +18,4 @@ public class DetailPrd {
     List<String> prdInfoImages;
     List<String> prdCS;
     List<String> prdCSQty;
-    public void reset(){
-        if(this.prdInfoImages!=null){
-            this.prdInfoImages.clear();
-        }
-        if(this.prdImages!=null){
-            this.prdImages.clear();
-        }
-        if(this.prdCS!=null){
-            this.prdCS.clear();
-        }
-        if(this.prdCSQty!=null){
-            this.prdCSQty.clear();
-        }
-    }
 }

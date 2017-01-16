@@ -2,6 +2,7 @@ package store.singto.singtostore.CartTab;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,11 +39,15 @@ import store.singto.singtostore.R;
  */
 public class CartTabFragment extends Fragment {
     private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener stateListener;
     private DatabaseReference reference;
     private ChildEventListener listener;
-    private List<CartPrd> carts;
+    private List<CartPrd> carts, ckCarts;
     private RecyclerView cartRV;
     private CartAdapter adapter;
+
+    private LinearLayout bottomLL;
+    private TextView totalPrice;
 
     public CartTabFragment() {
         // Required empty public constructor
@@ -52,26 +59,56 @@ public class CartTabFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cart_tab, container, false);
         auth = FirebaseAuth.getInstance();
+        stateListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user!=null){
+                    //listen childEvent, show bottom bar
+                    reference.child(user.getUid()).child("SHOPPINGCART").addChildEventListener(listener);
+
+                }else {
+                    //clear all, hide bottom bar
+
+                }
+            }
+        };
         reference = FirebaseDatabase.getInstance().getReference().child("users");
         carts = new ArrayList<>();
+        ckCarts = new ArrayList<>();
         listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 CartPrd c = dataSnapshot.getValue(CartPrd.class);
-                carts.add(c);
-                adapter = new CartAdapter(getContext(), carts);
-                cartRV.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                carts.add(0,c);
+                adapter.notifyItemInserted(0);
+                //adapter.notifyDataSetChanged();
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String ck = dataSnapshot.getKey();
+                CartPrd c = dataSnapshot.getValue(CartPrd.class);
+                int changedIndex = findIndexByKey(ck);
+                if(changedIndex!=-1){
+                    //
+                    carts.set(changedIndex,c);
+                    adapter.notifyItemChanged(changedIndex);
+                }
+
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String ck = dataSnapshot.getKey();
+                int changedIndex = findIndexByKey(ck);
+                if(changedIndex!=-1){
+                    //
+                    carts.remove(changedIndex);
+                    adapter.notifyItemRemoved(changedIndex);
+                }
 
             }
 
@@ -87,32 +124,16 @@ public class CartTabFragment extends Fragment {
         };
         cartRV = (RecyclerView) view.findViewById(R.id.cartRV);
         cartRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new CartAdapter(getContext(), carts);
+        cartRV.setAdapter(adapter);
+        //bottom bar
+        bottomLL = (LinearLayout) view.findViewById(R.id.cartTab_bottombar);
+        bottomLL.setVisibility(View.INVISIBLE);
+
+        totalPrice = (TextView) view.findViewById(R.id.cartTotolPrice);
+
+        auth.addAuthStateListener(stateListener);
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //check user login or not, download carts
-        if(auth.getCurrentUser()!=null){
-            String uid = auth.getCurrentUser().getUid();
-            reference.child(uid).child("SHOPPINGCART").addChildEventListener(listener);
-        }
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //detatch listener
-        if(!carts.isEmpty()){
-            carts.clear();
-            adapter.notifyDataSetChanged();
-        }
-        if(auth.getCurrentUser()!=null){
-            String uid = auth.getCurrentUser().getUid();
-            reference.child(uid).child("SHOPPINGCART").removeEventListener(listener);
-        }
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder{
@@ -190,5 +211,20 @@ public class CartTabFragment extends Fragment {
         public int getItemCount() {
             return list.size();
         }
+    }
+
+    private int findIndexByKey(String key){
+        int de = -1;
+        for(int i=0;i<carts.size();i++){
+            if(carts.get(i).cartKey.equals(key)){
+                de = i;
+                break;
+            }
+        }
+        return de;
+    }
+
+    private void updateBottomBar(){
+
     }
 }
