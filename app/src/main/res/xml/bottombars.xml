@@ -1,0 +1,18 @@
+<tabs>
+    <tab
+        id="@+id/storyTab"
+        icon="@drawable/ic_color_lens_white_24dp"
+        title="Story"/>
+    <tab
+        id="@+id/productTab"
+        icon="@drawable/ic_local_offer_white_24dp"
+        title="Product"/>
+    <tab
+        id="@+id/cartTab"
+        icon="@drawable/ic_shopping_cart_white_24dp"
+        title="Cart"/>
+    <tab
+        id="@+id/meTab"
+        icon="@drawable/ic_account_box_white_24dp"
+        title="Me"/>
+</tabs>

@@ -40,6 +40,10 @@
     <string name="cod"> CASH ON DELIVERY(BANGKOK SELECTED AREA)</string>
     <string name="refundable"> REFUNDABLE WITHIN 7 DAYS</string>
     <string name="nonrefundable"> FOOD, NON-REFUNDABLE</string>
+    <string name="storyTab">STORY</string>
+    <string name="prdTab">PRODUCT</string>
+    <string name="cartTab">CART</string>
+    <string name="meTab">ME</string>
 
 
 </resources>
