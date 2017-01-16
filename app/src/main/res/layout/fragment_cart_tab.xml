@@ -1,13 +1,45 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="store.singto.singtostore.CartTab.CartTabFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/fiftydp"
+        android:paddingTop="@dimen/fourdp"
+        android:paddingLeft="@dimen/tenMargin"
+        android:paddingRight="@dimen/tenMargin"
+        android:id="@+id/cartRV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="THIS IS CART TAB" />
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fiftydp">
+        <TextView
+            android:id="@+id/cartTotolPrice"
+            android:textColor="@color/colorPrimary"
+            android:text="TOTOAL: THB 999.0"
+            android:textAlignment="center"
+            android:gravity="fill_vertical"
+            android:layout_weight="1"
+            android:layout_width="@dimen/zerodp"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/cartCheckBtn"
+            android:text="CHECK OUT"
+            android:textColor="@color/whiteColor"
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_width="@dimen/zerodp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

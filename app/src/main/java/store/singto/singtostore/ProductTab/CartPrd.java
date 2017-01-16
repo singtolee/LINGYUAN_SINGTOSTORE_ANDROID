@@ -5,13 +5,14 @@ package store.singto.singtostore.ProductTab;
  */
 
 public class CartPrd {
-    boolean Check;
-    int ID;
-    int Qty;
-    String prdCS;
-    String prdImg;
-    String prdKey;
-    int prdPrice;
-    String prdTitle;
+    public boolean Check;
+    public int ID;
+    public int Qty;
+    public String prdCS;
+    public String prdImg;
+    public String prdKey;
+    public int prdPrice;
+    public String prdTitle;
+    public String cartKey;
 
 }

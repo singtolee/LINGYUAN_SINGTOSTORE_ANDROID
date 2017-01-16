@@ -126,7 +126,6 @@
                 android:numColumns="2"
                 android:columnWidth="@dimen/fortyMargin"
                 android:verticalSpacing="@dimen/tenMargin"
-                android:horizontalSpacing="@dimen/tenMargin"
                 android:gravity="center"
                 android:stretchMode="columnWidth"
                 android:id="@+id/prdCSListView">

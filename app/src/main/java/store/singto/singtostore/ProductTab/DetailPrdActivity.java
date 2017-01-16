@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -28,7 +29,6 @@ import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,24 +47,29 @@ import store.singto.singtostore.Tools.MyGridView;
 public class DetailPrdActivity extends AppCompatActivity {
     private String prdKey;
     private DetailPrd product;
-    private int csID = 0;
+    private int csID = -1;
+
     private DatabaseReference reference, ref;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private ValueEventListener listener;
+
     private SliderLayout carousel;
     private Point size;
     private int ssw,ssh;
+
     private TextView title, price, sub;
     private LinearLayout commitmentsPart;
     private TextView freeshipping, shippingTime,cod,refundable, nonrefundable;
+
     private MyGridView prdCSListView, prdInfoImgGridView;
     private View endView;
+
     private ImageView likeBtn;
     private Button cartBtn, buyBtn;
 
     //variables for gridview
-    TextView GridViewItems, BackSelectedItem;
+    TextView GridViewItems, BackSelectedItem, tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,32 +121,17 @@ public class DetailPrdActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()!=null){
                     DetailPrd prd = new DetailPrd();
-                    //prd = null;
+                    //prd.reset();
                     prd.prdName = dataSnapshot.child("productName").getValue().toString();
                     prd.prdSub = dataSnapshot.child("productSubDetail").getValue().toString();
                     prd.prdPrice = dataSnapshot.child("productPrice").getValue().toString();
                     prd.prdPackageInfo = dataSnapshot.child("productPackageInfo").getValue().toString();
                     prd.prdSuppler = dataSnapshot.child("productSuppler").getValue().toString();
                     prd.prdRefundable = (Boolean) dataSnapshot.child("productRefundable").getValue();
-//                    if(prd.prdImages!=null){
-//                        prd.prdImages.clear();
-//                    }
                     prd.prdImages = (List<String>) dataSnapshot.child("productImages").getValue();
-                    if(dataSnapshot.hasChild("productInfoImages")){
-//                        if(prd.prdInfoImages!=null){
-//                            prd.prdInfoImages.clear();
-//                        }
-                        prd.prdInfoImages = (List<String>) dataSnapshot.child("productInfoImages").getValue();
-                    }
-//                    if(prd.prdCS!=null){
-//                        prd.prdCS.clear();
-//                    }
+                    prd.prdInfoImages = (List<String>) dataSnapshot.child("productInfoImages").getValue();
                     prd.prdCS = (List<String>) dataSnapshot.child("prodcutCS").getValue();
-//                    if(prd.prdCSQty!=null){
-//                        prd.prdCSQty.clear();
-//                    }
                     prd.prdCSQty = (List<String>) dataSnapshot.child("prodcutCSQty").getValue();
-                    //setUpUI();
                     product = new DetailPrd();
                     product = prd;
                     updateUI(prd);
@@ -151,14 +141,10 @@ public class DetailPrdActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         };
-
         //load prd by prdkey
-        reference.addValueEventListener(listener);
-
-
+        //reference.addValueEventListener(listener);
     }
 
     @Override
@@ -173,20 +159,17 @@ public class DetailPrdActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        reference.addValueEventListener(listener);
         auth.addAuthStateListener(authStateListener);
-        //reference.addValueEventListener(listener);
-        //carousel.stopAutoCycle();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        System.out.println("SINGTO OUT");
+        reference.removeEventListener(listener);
         if(authStateListener!=null){
             auth.removeAuthStateListener(authStateListener);
         }
-        //carousel.stopAutoCycle();
-        //reference.removeEventListener(listener);
     }
 
     private void updateUI(final DetailPrd prd){
@@ -194,6 +177,7 @@ public class DetailPrdActivity extends AppCompatActivity {
         params.height = ssw;
         params.width = ssw;
         carousel.setLayoutParams(params);
+        carousel.removeAllSliders();
         for(String url: prd.prdImages){
             DefaultSliderView c = new DefaultSliderView(this);
             c.image(url);
@@ -228,24 +212,45 @@ public class DetailPrdActivity extends AppCompatActivity {
         }
 
         prdCSListView.setAdapter(new CSAdapter(this, prd.prdCS, prd.prdCSQty));
+        //check Qty, ViewTreeObserver make sure gridview.getChild return non null obj
+        ViewTreeObserver vto = prdCSListView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                for(int i=0;i<prd.prdCSQty.size();i++){
+                    tv = (TextView) prdCSListView.getChildAt(i);
+                    tv.setBackgroundColor(getColor(R.color.whiteColor));
+                    tv.setTextColor(getColor(R.color.colorPrimary));
+                }
+                for(int i=0;i<prd.prdCSQty.size();i++){
+                    int cqty = Integer.parseInt(prd.prdCSQty.get(i));
+                    if(cqty>0){
+                        tv = (TextView) prdCSListView.getChildAt(i);
+                        tv.setBackgroundColor(getColor(R.color.colorPrimary));
+                        tv.setTextColor(getColor(R.color.whiteColor));
+                        csID = i;
+                        cartBtn.setEnabled(true);
+                        buyBtn.setEnabled(true);
+                        break;
+                    }
+                }
+            }
+        });
         prdCSListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //selectedItem = parent.getItemAtPosition(position).toString();
                 //de select all
-                csID = position;
                 for(int i=0;i<prd.prdCS.size();i++){
                     BackSelectedItem = (TextView) prdCSListView.getChildAt(i);
                     BackSelectedItem.setBackgroundColor(getColor(R.color.whiteColor));
                     BackSelectedItem.setTextColor(getColor(R.color.colorPrimary));
-                    BackSelectedItem.setSelected(false);
                 }
-                //select at clicked position
-                view.setSelected(true);
+                //change color at position
                 GridViewItems = (TextView) view;
-                GridViewItems.setSelected(true);
                 GridViewItems.setBackgroundColor(getColor(R.color.colorPrimary));
                 GridViewItems.setTextColor(getColor(R.color.whiteColor));
+                csID = position;
             }
         });
 
@@ -254,6 +259,10 @@ public class DetailPrdActivity extends AppCompatActivity {
         }else {
             prdInfoImgGridView.setVisibility(View.GONE);
         }
+
+        likeBtn.setVisibility(View.VISIBLE);
+        cartBtn.setVisibility(View.VISIBLE);
+        buyBtn.setVisibility(View.VISIBLE);
     }
 
     private void setUpUI(){
@@ -266,6 +275,7 @@ public class DetailPrdActivity extends AppCompatActivity {
         sub.setEllipsize(TextUtils.TruncateAt.END);
 
         commitmentsPart = (LinearLayout)findViewById(R.id.commintmentspart);
+        commitmentsPart.setVisibility(View.INVISIBLE);
 
         freeshipping = (TextView)findViewById(R.id.freeshipping);
         shippingTime = (TextView)findViewById(R.id.shippingfast);
@@ -278,7 +288,10 @@ public class DetailPrdActivity extends AppCompatActivity {
         endView = findViewById(R.id.thisisendview);
 
         likeBtn = (ImageView) findViewById(R.id.likeBtn);
+        likeBtn.setVisibility(View.INVISIBLE);
         cartBtn = (Button)findViewById(R.id.addToCartBtn);
+        cartBtn.setVisibility(View.INVISIBLE);
+        cartBtn.setEnabled(false);
         cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -295,6 +308,7 @@ public class DetailPrdActivity extends AppCompatActivity {
                     cart.prdTitle = product.prdName;
                     cart.prdPrice = Integer.parseInt(product.prdPrice);
                     String kk = ref.child(uid).child("SHOPPINGCART").push().getKey();
+                    cart.cartKey = kk;
                     ref.child(uid).child("SHOPPINGCART").child(kk).setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -308,13 +322,25 @@ public class DetailPrdActivity extends AppCompatActivity {
                     });
 
                 }else {
-                    Intent intent= new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
+                    gotosignin();
                 }
 
             }
         });
         buyBtn = (Button)findViewById(R.id.buyNowBtn);
+        buyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(auth.getCurrentUser()!=null){
+                    //
+                    System.out.println(csID);
+                }else {
+                    gotosignin();
+                }
+            }
+        });
+        buyBtn.setVisibility(View.INVISIBLE);
+        buyBtn.setEnabled(false);
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,8 +366,7 @@ public class DetailPrdActivity extends AppCompatActivity {
                     });
                 }else {
                     //tell user to login
-                    Intent intent= new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
+                    gotosignin();
                 }
             }
         });
@@ -393,6 +418,21 @@ public class DetailPrdActivity extends AppCompatActivity {
             this.csqty = csqty;
         }
 
+        @Override
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            //return super.isEnabled(position);
+            if(Integer.parseInt(csqty.get(position))>0){
+                return true;
+            }else {
+                return false;
+            }
+        }
+
         public int getCount(){
             return cs.size();
         }
@@ -409,19 +449,14 @@ public class DetailPrdActivity extends AppCompatActivity {
             TextView csView;
             if (convertView == null) {
                 csView = new TextView(context);
-                csView.setLayoutParams(new GridView.LayoutParams(ssw/2-20,ssw/19));
+                csView.setLayoutParams(new GridView.LayoutParams(ssw/2,ssw/17));
                 csView.setEllipsize(TextUtils.TruncateAt.END);
+                csView.setTextSize(ssw/88);
+                //csView.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
                 csView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                csView.setText(cs.get(position));
+                csView.setText(cs.get(position)+" ("+ csqty.get(position)+ " LEFT)");
                 csView.setTextColor(getColor(R.color.colorPrimary));
                 csView.setBackgroundColor(getColor(R.color.whiteColor));
-
-                //default select first element;
-                if(position == 0){
-                    csView.setTextColor(getColor(R.color.whiteColor));
-                    csView.setBackgroundColor(getColor(R.color.colorPrimary));
-                }
-
             } else {
                 csView = (TextView) convertView;
             }
@@ -451,6 +486,11 @@ public class DetailPrdActivity extends AppCompatActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
+    }
+
+    private void gotosignin(){
+        Intent intent= new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
     }
 
 }
