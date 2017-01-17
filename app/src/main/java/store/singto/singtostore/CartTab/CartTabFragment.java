@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -90,8 +91,6 @@ public class CartTabFragment extends Fragment {
                 carts.add(0,c);
                 adapter.notifyItemInserted(0);
                 updateBottomBar();
-                //adapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -100,13 +99,10 @@ public class CartTabFragment extends Fragment {
                 CartPrd c = dataSnapshot.getValue(CartPrd.class);
                 int changedIndex = findIndexByKey(ck);
                 if(changedIndex!=-1){
-                    //
                     carts.set(changedIndex,c);
                     updateBottomBar();
                     adapter.notifyItemChanged(changedIndex);
                 }
-
-
             }
 
             @Override
@@ -119,17 +115,14 @@ public class CartTabFragment extends Fragment {
                     updateBottomBar();
                     adapter.notifyItemRemoved(changedIndex);
                 }
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         };
         cartRV = (RecyclerView) view.findViewById(R.id.cartRV);
@@ -174,29 +167,6 @@ public class CartTabFragment extends Fragment {
             qty = (TextView) itemView.findViewById(R.id.cartQty);
             minusBtn = (TextView) itemView.findViewById(R.id.cartMinusBtn);
             plusBtn = (TextView) itemView.findViewById(R.id.cartPlusBtn);
-            minusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int cv = Integer.parseInt(qty.getText().toString());
-                    cv = cv - 1;
-                    if(cv<1){
-                        cv = 1;
-                    }
-                    qty.setText(Integer.toString(cv));
-                }
-            });
-            plusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int cv = Integer.parseInt(qty.getText().toString());
-                    cv = cv + 1;
-                    if(cv> 3){
-                        cv = 3; //max QTY is 3
-                    }
-                    qty.setText(Integer.toString(cv));
-                }
-            });
-
         }
     }
 
@@ -231,6 +201,103 @@ public class CartTabFragment extends Fragment {
             holder.cartCS.setText(p.prdCS);
             holder.cartPrice.setText("THB "+p.prdPrice+".0");
             holder.qty.setText(Integer.toString(p.Qty));
+
+            holder.plusBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    if(auth.getCurrentUser()!=null){
+                        final String uid = auth.getCurrentUser().getUid();
+                        DatabaseReference qtyRef = FirebaseDatabase.getInstance().getReference().child("AllProduct").child(p.prdKey).child("prodcutCSQty").child(Integer.toString(p.ID));
+                        qtyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final int max = Integer.parseInt(dataSnapshot.getValue().toString());
+                                if(max>0){
+                                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("SHOPPINGCART").child(p.cartKey).child("Qty");
+                                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            int num = Integer.parseInt(dataSnapshot.getValue().toString());
+                                            num = num + 1;
+                                            if(num>max){
+                                                num = max;
+                                            }
+                                            ref.setValue(num);
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+
+                }
+            });
+
+            holder.minusBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    if(auth.getCurrentUser()!=null){
+                        String uid = auth.getCurrentUser().getUid();
+                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("SHOPPINGCART").child(p.cartKey).child("Qty");
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                int num = Integer.parseInt(dataSnapshot.getValue().toString());
+                                num = num - 1;
+                                if(num<1){
+                                    num = 1;
+                                }
+                                ref.setValue(num);
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                    }
+
+                }
+            });
+
+            holder.check.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    if(auth.getCurrentUser()!=null){
+                        String uid = auth.getCurrentUser().getUid();
+                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("SHOPPINGCART").child(p.cartKey).child("Check");
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                boolean isChecked = (boolean) dataSnapshot.getValue();
+                                if(isChecked){
+                                    ref.setValue(false);
+
+                                }else {
+                                    ref.setValue(true);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                    }
+                }
+            });
         }
         @Override
         public int getItemCount() {
