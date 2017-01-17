@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_edit_user_free_address"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="store.singto.singtostore.MeTab.EditUserFreeAddressActivity">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="@dimen/thirtyMargin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/addressUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/namehint"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="@dimen/tenMargin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/addressUserPhone"
+            android:inputType="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/phonehint"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:spinnerMode="dialog"
+        android:layout_marginTop="@dimen/tenMargin"
+        android:id="@+id/locationSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </Spinner>
+    <View
+        android:padding="@dimen/sixdp"
+        android:background="@color/graycolor"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/onedp"/>
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="@dimen/tenMargin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/addressUserRoom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/roomHint"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/submitFreeAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fortyMargin"
+        android:text="@string/saveFreeAddress"
+        android:textColor="@color/whiteColor"
+        android:background="@color/colorPrimary"/>
+
+</LinearLayout>

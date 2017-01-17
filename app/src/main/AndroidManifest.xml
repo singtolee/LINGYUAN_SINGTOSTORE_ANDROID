@@ -10,8 +10,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -32,7 +32,8 @@
         <activity android:name=".MeTab.EditUserNameActivity" />
         <activity android:name=".MeTab.EditUserPhoneActivity" />
         <activity android:name=".MeTab.EditUserAvatarActivity" />
-        <activity android:name=".ProductTab.DetailPrdActivity"></activity>
+        <activity android:name=".ProductTab.DetailPrdActivity" />
+        <activity android:name=".MeTab.EditUserFreeAddressActivity"></activity>
     </application>
 
 </manifest>

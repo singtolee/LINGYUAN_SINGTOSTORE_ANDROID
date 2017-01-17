@@ -1,11 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="store.singto.singtostore.MeTab.MeTabFragment">
-
-    <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -54,8 +52,14 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/thirtyMargin"
             android:layout_alignParentTop="true" />
-
-
     </RelativeLayout>
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:padding="@dimen/tenMargin"
+        android:id="@+id/userFunctionsLV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

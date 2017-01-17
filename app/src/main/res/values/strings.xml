@@ -13,6 +13,9 @@
     <string name="registeraccount">REGISTER AN ACCOUNT</string>
     <string name="emailHint">Email Address</string>
     <string name="passwordlHint">Password</string>
+    <string name="buildingHint">Choose Location</string>
+    <string name="roomHint">Room</string>
+    <string name="saveFreeAddress">SAVE ADDRESS</string>
     <string name="invalidemail">Invalid Emaill Adreess</string>
     <string name="passwordcannotbeempty">Password is empty</string>
     <string name="passwordiswrong">Wrong Password</string>
@@ -44,6 +47,9 @@
     <string name="prdTab">PRODUCT</string>
     <string name="cartTab">CART</string>
     <string name="meTab">ME</string>
+    <string name="tellUsertologin">Please login first</string>
+    <string name="roomCannotempty">Room Number is Empty</string>
+    <string name="addressSaved">Address Saved</string>
 
 
 </resources>

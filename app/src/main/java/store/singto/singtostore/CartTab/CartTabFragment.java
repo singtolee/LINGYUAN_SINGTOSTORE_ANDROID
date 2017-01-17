@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,31 +58,38 @@ public class CartTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_cart_tab, container, false);
+        final View view = inflater.inflate(R.layout.fragment_cart_tab, container, false);
+        carts = new ArrayList<>();
+        ckCarts = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
         stateListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user!=null){
+                    carts.clear();
+                    ckCarts.clear();
+                    adapter.notifyDataSetChanged();
                     //listen childEvent, show bottom bar
                     reference.child(user.getUid()).child("SHOPPINGCART").addChildEventListener(listener);
 
                 }else {
                     //clear all, hide bottom bar
+                    carts.clear();
+                    ckCarts.clear();
+                    adapter.notifyDataSetChanged();
 
                 }
             }
         };
         reference = FirebaseDatabase.getInstance().getReference().child("users");
-        carts = new ArrayList<>();
-        ckCarts = new ArrayList<>();
         listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 CartPrd c = dataSnapshot.getValue(CartPrd.class);
                 carts.add(0,c);
                 adapter.notifyItemInserted(0);
+                updateBottomBar();
                 //adapter.notifyDataSetChanged();
 
             }
@@ -94,6 +102,7 @@ public class CartTabFragment extends Fragment {
                 if(changedIndex!=-1){
                     //
                     carts.set(changedIndex,c);
+                    updateBottomBar();
                     adapter.notifyItemChanged(changedIndex);
                 }
 
@@ -107,6 +116,7 @@ public class CartTabFragment extends Fragment {
                 if(changedIndex!=-1){
                     //
                     carts.remove(changedIndex);
+                    updateBottomBar();
                     adapter.notifyItemRemoved(changedIndex);
                 }
 
@@ -133,6 +143,21 @@ public class CartTabFragment extends Fragment {
         totalPrice = (TextView) view.findViewById(R.id.cartTotolPrice);
 
         auth.addAuthStateListener(stateListener);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                deleteCartByIndex(position);
+            }
+
+            //no Move support
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+        }).attachToRecyclerView(cartRV);
         return view;
     }
 
@@ -225,6 +250,31 @@ public class CartTabFragment extends Fragment {
     }
 
     private void updateBottomBar(){
+        //TODO Badge update!!!
+        int item = 0;
+        int total = 0;
+        for(CartPrd cc : carts){
+            if(cc.Check){
+                item = item + cc.Qty;
+                total = total + cc.Qty*cc.prdPrice;
+            }
+        }
+
+        if (item>0){
+            totalPrice.setText("TOTOAL: THB "+Integer.toString(total)+".0");
+            bottomLL.setVisibility(View.VISIBLE);
+        }else{
+            bottomLL.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    private void deleteCartByIndex(int position){
+        String ckey = carts.get(position).cartKey;
+        if (auth.getCurrentUser()!=null){
+            String uid = auth.getCurrentUser().getUid();
+            reference.child(uid).child("SHOPPINGCART").child(ckey).removeValue();
+        }
 
     }
 }

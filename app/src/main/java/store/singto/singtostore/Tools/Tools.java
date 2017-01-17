@@ -11,8 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class Tools {
-    public static DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    public static String cuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     public static boolean isEmail(String email){
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return false;

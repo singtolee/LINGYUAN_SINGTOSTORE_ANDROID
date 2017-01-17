@@ -1,15 +1,21 @@
 package store.singto.singtostore.MeTab;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import store.singto.singtostore.LoginRegister.LoginActivity;
 import store.singto.singtostore.R;
@@ -43,6 +51,11 @@ public class MeTabFragment extends Fragment {
     private ImageView userAvatarImgv;
     private TextView userName;
 
+    private RecyclerView functions;
+    private FuncAdapter funcAdapter;
+    private String[] funcs;
+    private int[] icons;
+
     public MeTabFragment() {
         // Required empty public constructor
     }
@@ -51,6 +64,17 @@ public class MeTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_me_tab, container, false);
+        icons = new int[]{
+                R.drawable.ic_assignment_black_24dp,
+                R.drawable.ic_place_black_24dp,
+                R.drawable.ic_favorite_red_24dp,
+                R.drawable.ic_account_circle_black_24dp,
+                R.drawable.ic_room_service_black_24dp,
+                R.drawable.ic_share_black_24dp
+        };
+        funcs = new String[]{
+          "ORDERS","ADDRESS","FAVORITE","PROFILE","CONTACT US","SHARE ME"
+        };
         setupView(view);
         return view;
     }
@@ -115,6 +139,39 @@ public class MeTabFragment extends Fragment {
             }
         });
 
+        functions = (RecyclerView) view.findViewById(R.id.userFunctionsLV);
+        functions.setLayoutManager(new LinearLayoutManager(getContext()));
+        funcAdapter = new FuncAdapter(getContext(), funcs, icons);
+        funcAdapter.setOnItemClickListener(new FuncAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int index) {
+                switch (index){
+                    case 0:
+                        break;
+                    case 1:
+                        if(mAuth.getCurrentUser()!=null){
+                            Intent intent1 = new Intent(getContext(),EditUserFreeAddressActivity.class);
+                            startActivity(intent1);
+                        }else {
+                            Toast.makeText(getContext(),R.string.tellUsertologin,Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        functions.setAdapter(funcAdapter);
+
     }
 
     @Override
@@ -173,6 +230,62 @@ public class MeTabFragment extends Fragment {
             }
         };
         mDatabase.addValueEventListener(listener);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView funcName;
+        public ImageView funcIcon;
+        public ViewHolder(LayoutInflater layoutInflater, ViewGroup viewGroup){
+            super(layoutInflater.inflate(R.layout.userfuncscell, viewGroup, false));
+            funcName = (TextView) itemView.findViewById(R.id.funcName);
+            funcIcon = (ImageView) itemView.findViewById(R.id.funcIcon);
+        }
+    }
+
+    public static class FuncAdapter extends RecyclerView.Adapter<ViewHolder>{
+        private Context context;
+        private int[] ics;
+        private String[] funcs;
+
+        public FuncAdapter(Context context, String[] f, int[] ic){
+            this.context = context;
+            this.funcs = f;
+            this.ics = ic;
+
+        }
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ViewHolder(LayoutInflater.from(parent.getContext()),parent);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.funcName.setText(funcs[position]);
+            holder.funcIcon.setImageResource(ics[position]);
+            if(itemClickListener!=null){
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int index = holder.getLayoutPosition();
+                        itemClickListener.onItemClick(holder.itemView, index);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return funcs.length;
+        }
+
+        public interface OnItemClickListener{
+            void onItemClick(View view, int index);
+        }
+
+        private OnItemClickListener itemClickListener;
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+            this.itemClickListener = onItemClickListener;
+        }
     }
 
 }
