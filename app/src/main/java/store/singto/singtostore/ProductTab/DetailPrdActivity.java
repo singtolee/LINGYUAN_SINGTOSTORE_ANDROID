@@ -331,7 +331,8 @@ public class DetailPrdActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(auth.getCurrentUser()!=null){
                     //
-                    System.out.println(csID);
+                    Intent buyInten = new Intent(DetailPrdActivity.this, BuyNowActivity.class);
+                    startActivity(buyInten);
                 }else {
                     gotosignin();
                 }

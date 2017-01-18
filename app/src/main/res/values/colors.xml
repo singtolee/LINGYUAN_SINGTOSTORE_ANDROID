@@ -11,4 +11,5 @@
     <color name="graycolor">#A9A9A9</color>
     <color name="lightgray">#F2F4F4</color>
     <color name="transblack">#B3000000</color>
+    <color name="transhalf">#4D000000</color>
 </resources>

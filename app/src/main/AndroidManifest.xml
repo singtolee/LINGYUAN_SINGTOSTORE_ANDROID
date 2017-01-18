@@ -34,7 +34,8 @@
         <activity android:name=".MeTab.EditUserAvatarActivity" />
         <activity android:name=".ProductTab.DetailPrdActivity" />
         <activity android:name=".MeTab.EditUserFreeAddressActivity" />
-        <activity android:name=".MeTab.FavoritePrdActivity"></activity>
+        <activity android:name=".MeTab.FavoritePrdActivity" />
+        <activity android:name=".ProductTab.BuyNowActivity" android:theme="@style/Transparent"></activity>
     </application>
 
 </manifest>
