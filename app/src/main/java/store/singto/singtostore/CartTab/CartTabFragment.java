@@ -51,6 +51,8 @@ public class CartTabFragment extends Fragment {
     private LinearLayout bottomLL;
     private TextView totalPrice;
 
+    private String UID;
+
     public CartTabFragment() {
         // Required empty public constructor
     }
@@ -68,19 +70,24 @@ public class CartTabFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user!=null){
+                    UID = user.getUid();
                     carts.clear();
                     ckCarts.clear();
                     adapter.notifyDataSetChanged();
                     //listen childEvent, show bottom bar
-                    reference.child(user.getUid()).child("SHOPPINGCART").addChildEventListener(listener);
+                    reference.child(UID).child("SHOPPINGCART").addChildEventListener(listener);
 
                 }else {
                     //clear all, hide bottom bar
                     carts.clear();
                     ckCarts.clear();
                     adapter.notifyDataSetChanged();
-
+                    updateBottomBar();
+                    if(UID!=null){
+                        reference.child(UID).child("SHOPPINGCART").removeEventListener(listener);
+                    }
                 }
+
             }
         };
         reference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -151,6 +158,7 @@ public class CartTabFragment extends Fragment {
             }
 
         }).attachToRecyclerView(cartRV);
+
         return view;
     }
 
