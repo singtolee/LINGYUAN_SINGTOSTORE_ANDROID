@@ -22,4 +22,6 @@
     <dimen name="onedp">1dp</dimen>
     <dimen name="twodp">2dp</dimen>
     <dimen name="zerodp">0dp</dimen>
+    <dimen name="yeldp">120dp</dimen>
+    <dimen name="ysldp">140dp</dimen>
 </resources>

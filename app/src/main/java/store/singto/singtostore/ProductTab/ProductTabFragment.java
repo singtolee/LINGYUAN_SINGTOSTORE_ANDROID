@@ -53,6 +53,8 @@ public class ProductTabFragment extends Fragment {
         indicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.loadingIndicator);
 
         viewPager = (ViewPager) view.findViewById(R.id.prdViewPager);
+        //Adapter adapter = new Adapter(getFragmentManager());
+
         viewPager.setOffscreenPageLimit(3); //cache 123A321 pages
         categoryTab = (TabLayout) view.findViewById(R.id.categoryTab);
         categoryTab.setupWithViewPager(viewPager);

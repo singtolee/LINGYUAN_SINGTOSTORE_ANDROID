@@ -33,7 +33,8 @@
         <activity android:name=".MeTab.EditUserPhoneActivity" />
         <activity android:name=".MeTab.EditUserAvatarActivity" />
         <activity android:name=".ProductTab.DetailPrdActivity" />
-        <activity android:name=".MeTab.EditUserFreeAddressActivity"></activity>
+        <activity android:name=".MeTab.EditUserFreeAddressActivity" />
+        <activity android:name=".MeTab.FavoritePrdActivity"></activity>
     </application>
 
 </manifest>

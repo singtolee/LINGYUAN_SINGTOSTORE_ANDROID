@@ -143,8 +143,6 @@ public class DetailPrdActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        //load prd by prdkey
-        //reference.addValueEventListener(listener);
     }
 
     @Override
