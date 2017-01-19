@@ -144,10 +144,16 @@ public class MeTabFragment extends Fragment {
             public void onItemClick(View view, int index) {
                 switch (index){
                     case 0:
+                        if(mAuth.getCurrentUser()!=null){
+                            Intent orderIntent = new Intent(getActivity(),OrdersActivity.class);
+                            startActivity(orderIntent);
+                        }else {
+                            Toast.makeText(getContext(),R.string.tellUsertologin,Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case 1:
                         if(mAuth.getCurrentUser()!=null){
-                            Intent intent1 = new Intent(getContext(),EditUserFreeAddressActivity.class);
+                            Intent intent1 = new Intent(getActivity(),EditUserFreeAddressActivity.class);
                             startActivity(intent1);
                         }else {
                             Toast.makeText(getContext(),R.string.tellUsertologin,Toast.LENGTH_LONG).show();

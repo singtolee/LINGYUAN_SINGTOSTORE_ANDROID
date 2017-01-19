@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+
+    <ImageView
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/placeholder"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/orderPrdImg"
+        android:layout_width="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/orderPrdTitle"
+        android:layout_alignTop="@+id/orderPrdImg"
+        android:layout_toEndOf="@+id/orderPrdImg" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_toEndOf="@+id/orderPrdImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderPrdTitle"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:id="@+id/orderPrdCS" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/orderPrdImg"
+        android:layout_marginStart="8dp"
+        android:layout_alignBottom="@+id/orderPrdImg"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/orderPrdPrice" />
+
+    <TextView
+        android:layout_toEndOf="@+id/orderPrdPrice"
+        android:layout_marginStart="8dp"
+        android:text="21:34 19-01-2017"
+        android:textAlignment="viewEnd"
+        android:layout_marginEnd="8dp"
+        android:layout_alignTop="@+id/orderPrdPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/middleDot"
+            android:tint="@color/graycolor"
+            android:src="@drawable/statusDot"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+
+        <ImageView
+            android:id="@+id/firstDot"
+            android:src="@drawable/statusDot"
+            android:tint="@color/colorPrimary"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="30dp"
+            android:layout_centerVertical="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <ImageView
+            android:id="@+id/lastDot"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:layout_centerVertical="true"
+            android:tint="@color/graycolor"
+            android:src="@drawable/statusDot"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <View
+            android:layout_toEndOf="@+id/firstDot"
+            android:layout_toStartOf="@+id/middleDot"
+            android:layout_centerVertical="true"
+            android:background="@color/graycolor"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"/>
+
+        <View
+            android:layout_toStartOf="@+id/lastDot"
+            android:layout_toEndOf="@+id/middleDot"
+            android:layout_centerVertical="true"
+            android:background="@color/graycolor"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"/>
+
+        <TextView
+            android:layout_below="@+id/firstDot"
+            android:text="CONFIRMED"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="ON THE WAY"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/middleDot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="DONE"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@+id/lastDot"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
