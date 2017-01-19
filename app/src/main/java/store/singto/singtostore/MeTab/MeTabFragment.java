@@ -154,13 +154,20 @@ public class MeTabFragment extends Fragment {
                         }
                         break;
                     case 2:
-                        Intent fav = new Intent(getActivity(), FavoritePrdActivity.class);
-                        startActivity(fav);
+                        if(mAuth.getCurrentUser()!=null){
+                            Intent fav = new Intent(getActivity(), FavoritePrdActivity.class);
+                            startActivity(fav);
+                        }else {
+                            Toast.makeText(getContext(),R.string.tellUsertologin,Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case 3:
-                        Intent profile = new Intent(getActivity(), UserProfileActivity.class);
-                        startActivity(profile);
-
+                        if(mAuth.getCurrentUser()!=null){
+                            Intent profile = new Intent(getActivity(), UserProfileActivity.class);
+                            startActivity(profile);
+                        }else {
+                            Toast.makeText(getContext(),R.string.tellUsertologin,Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case 4:
                         break;

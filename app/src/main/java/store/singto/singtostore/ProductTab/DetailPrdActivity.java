@@ -1,10 +1,12 @@
 package store.singto.singtostore.ProductTab;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -41,6 +43,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import store.singto.singtostore.LoginRegister.LoginActivity;
+import store.singto.singtostore.MeTab.EditUserFreeAddressActivity;
+import store.singto.singtostore.MeTab.FreeAddress;
 import store.singto.singtostore.R;
 import store.singto.singtostore.Tools.MyGridView;
 
@@ -49,7 +53,9 @@ public class DetailPrdActivity extends AppCompatActivity {
     private DetailPrd product;
     private int csID = -1;
 
-    private DatabaseReference reference, ref;
+    private FreeAddress address;
+
+    private DatabaseReference reference, ref, addressRef;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private ValueEventListener listener;
@@ -86,8 +92,10 @@ public class DetailPrdActivity extends AppCompatActivity {
         Intent i = getIntent();
         prdKey = i.getStringExtra("prdKey");
         setUpUI();
+        address = new FreeAddress();
         reference = FirebaseDatabase.getInstance().getReference().child("AllProduct").child(prdKey);
         ref = FirebaseDatabase.getInstance().getReference().child("users");
+        addressRef = FirebaseDatabase.getInstance().getReference().child("FreeDeliveryAddresses");
         auth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
@@ -330,9 +338,48 @@ public class DetailPrdActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(auth.getCurrentUser()!=null){
-                    //
-                    Intent buyInten = new Intent(DetailPrdActivity.this, BuyNowActivity.class);
-                    startActivity(buyInten);
+                    // user login, check address
+                    String uid = auth.getCurrentUser().getUid();
+                    addressRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.getValue()!=null){
+                                //set address already, proceed
+                                Intent buyInten = new Intent(DetailPrdActivity.this, BuyNowActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("prdKey", prdKey);
+                                bundle.putInt("csID",csID);
+                                buyInten.putExtras(bundle);
+                                startActivity(buyInten);
+                            }else {
+                                // no address yet, pop up alert dialog
+                                AlertDialog.Builder builder = new AlertDialog.Builder(DetailPrdActivity.this);
+                                builder.setTitle("No Address Yet");
+                                builder.setMessage("Please edit your address first").setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //go to edit address
+                                        Intent addreeIntent = new Intent(DetailPrdActivity.this, EditUserFreeAddressActivity.class);
+                                        startActivity(addreeIntent);
+
+                                    }
+                                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }else {
                     gotosignin();
                 }

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,6 +171,8 @@ public class CartTabFragment extends Fragment {
             check = (ImageView) itemView.findViewById(R.id.isChecked);
             img = (ImageView) itemView.findViewById(R.id.cartMainImg);
             cartTitle = (TextView) itemView.findViewById(R.id.cartPrdName);
+            cartTitle.setSingleLine();
+            cartTitle.setEllipsize(TextUtils.TruncateAt.END);
             cartCS = (TextView) itemView.findViewById(R.id.cartPrdCS);
             cartPrice = (TextView) itemView.findViewById(R.id.cartPrdPrice);
             qty = (TextView) itemView.findViewById(R.id.cartQty);

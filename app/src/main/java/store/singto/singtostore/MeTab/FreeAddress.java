@@ -5,8 +5,8 @@ package store.singto.singtostore.MeTab;
  */
 
 public class FreeAddress {
-    String officeBuilding;
-    String phone;
-    String recipient;
-    String roomNumber;
+    public String officeBuilding;
+    public String phone;
+    public String recipient;
+    public String roomNumber;
 }
