@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="160dp">
+    android:layout_height="180dp">
 
     <ImageView
         android:layout_height="100dp"
         app:srcCompat="@drawable/placeholder"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="15dp"
         android:id="@+id/orderPrdImg"
         android:layout_width="100dp"
         android:layout_alignParentTop="true"
@@ -52,17 +52,19 @@
         android:layout_marginEnd="8dp"
         android:layout_alignTop="@+id/orderPrdPrice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/orderDateTime" />
 
     <RelativeLayout
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <ImageView
             android:id="@+id/middleDot"
             android:tint="@color/graycolor"
-            android:src="@drawable/statusDot"
+            android:src="@drawable/ic_fiber_manual_record_white_18dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:layout_width="20dp"
@@ -70,7 +72,7 @@
 
         <ImageView
             android:id="@+id/firstDot"
-            android:src="@drawable/statusDot"
+            android:src="@drawable/ic_fiber_manual_record_white_18dp"
             android:tint="@color/colorPrimary"
             android:layout_alignParentStart="true"
             android:layout_marginStart="30dp"
@@ -83,7 +85,7 @@
             android:layout_marginEnd="30dp"
             android:layout_centerVertical="true"
             android:tint="@color/graycolor"
-            android:src="@drawable/statusDot"
+            android:src="@drawable/ic_fiber_manual_record_white_18dp"
             android:layout_width="20dp"
             android:layout_height="20dp" />
         <View
@@ -105,6 +107,7 @@
         <TextView
             android:layout_below="@+id/firstDot"
             android:text="CONFIRMED"
+            android:layout_marginStart="8dp"
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -125,5 +128,12 @@
 
 
     </RelativeLayout>
+    <View
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/graycolor"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 </RelativeLayout>
