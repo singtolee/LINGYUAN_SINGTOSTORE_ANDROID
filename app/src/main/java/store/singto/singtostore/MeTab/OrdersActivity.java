@@ -1,6 +1,7 @@
 package store.singto.singtostore.MeTab;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,8 +58,10 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 OrderPrd oo = dataSnapshot.getValue(OrderPrd.class);
-                orders.add(oo);
-                adapter.notifyItemInserted(orders.size()-1);
+                //orders.add(oo);
+                //adapter.notifyItemInserted(orders.size()-1);
+                orders.add(0,oo);
+                adapter.notifyItemInserted(0);
             }
 
             @Override
@@ -114,6 +118,11 @@ public class OrdersActivity extends AppCompatActivity {
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView img;
         public TextView prdName, price,prdCS,dateTime;
+
+        public ImageView firstDot, middleDot, lastDot;
+        public View firstLine, secondLine;
+        public TextView confirmStatus, shippingStatus, doneStatus;
+
         public ViewHolder(LayoutInflater layoutInflater, ViewGroup viewGroup){
             super(layoutInflater.inflate(R.layout.order_prd_cell, viewGroup,false));
             img = (ImageView) itemView.findViewById(R.id.orderPrdImg);
@@ -122,6 +131,15 @@ public class OrdersActivity extends AppCompatActivity {
             price = (TextView)itemView.findViewById(R.id.orderPrdPrice);
             prdCS = (TextView) itemView.findViewById(R.id.orderPrdCS);
             dateTime = (TextView)itemView.findViewById(R.id.orderDateTime);
+            //for status bar
+            firstDot = (ImageView)itemView.findViewById(R.id.firstDot);
+            middleDot = (ImageView)itemView.findViewById(R.id.middleDot);
+            lastDot = (ImageView)itemView.findViewById(R.id.lastDot);
+            firstLine = itemView.findViewById(R.id.orderFirstLine);
+            secondLine = itemView.findViewById(R.id.orderSecondLine);
+            confirmStatus = (TextView)itemView.findViewById(R.id.orderConfirmedStatusText);
+            shippingStatus = (TextView)itemView.findViewById(R.id.orderShippingStatusText);
+            doneStatus = (TextView)itemView.findViewById(R.id.orderDoneStatusText);
         }
     }
 
@@ -146,6 +164,62 @@ public class OrdersActivity extends AppCompatActivity {
             holder.prdCS.setText(p.cs+"*"+Integer.toString(p.Qty));
             holder.price.setText("THB " + Integer.toString(p.Qty*p.price)+ ".0");
             holder.dateTime.setText(p.time+ " " + p.date);
+            int colorR = Color.parseColor("#FF3845");
+            int colorG = Color.parseColor("#A9A9A9");
+            int colorB = Color.parseColor("#000000");
+            switch (p.status){
+                case -1:
+                    //order cancelled
+                    holder.firstDot.setColorFilter(colorB);
+                    holder.middleDot.setColorFilter(colorG);
+                    holder.lastDot.setColorFilter(colorG);
+                    holder.firstLine.setBackgroundColor(colorG);
+                    holder.secondLine.setBackgroundColor(colorG);
+                    holder.confirmStatus.setText("CANCELLED");
+                    holder.confirmStatus.setTextColor(colorB);
+                    holder.shippingStatus.setVisibility(View.INVISIBLE);
+                    holder.doneStatus.setVisibility(View.INVISIBLE);
+
+                    break;
+                case 0:
+                    holder.firstDot.setColorFilter(colorR);
+                    holder.middleDot.setColorFilter(colorG);
+                    holder.lastDot.setColorFilter(colorG);
+                    holder.firstLine.setBackgroundColor(colorG);
+                    holder.secondLine.setBackgroundColor(colorG);
+                    holder.confirmStatus.setText("CONFIRMED");
+                    holder.confirmStatus.setTextColor(colorR);
+                    holder.shippingStatus.setVisibility(View.INVISIBLE);
+                    holder.doneStatus.setVisibility(View.INVISIBLE);
+                    break;
+                case 1:
+                    //shipping out
+                    holder.firstDot.setColorFilter(colorR);
+                    holder.middleDot.setColorFilter(colorR);
+                    holder.lastDot.setColorFilter(colorG);
+                    holder.firstLine.setBackgroundColor(colorR);
+                    holder.secondLine.setBackgroundColor(colorG);
+                    holder.confirmStatus.setText("CONFIRMED");
+                    holder.confirmStatus.setTextColor(colorR);
+                    holder.shippingStatus.setText("ON THE WAY");
+                    holder.shippingStatus.setTextColor(colorR);
+                    holder.doneStatus.setVisibility(View.INVISIBLE);
+                    break;
+                case 2:
+                    // order is done
+                    holder.firstDot.setColorFilter(colorR);
+                    holder.middleDot.setColorFilter(colorR);
+                    holder.lastDot.setColorFilter(colorR);
+                    holder.firstLine.setBackgroundColor(colorR);
+                    holder.secondLine.setBackgroundColor(colorR);
+                    holder.confirmStatus.setText("CONFIRMED");
+                    holder.confirmStatus.setTextColor(colorR);
+                    holder.shippingStatus.setText("ON THE WAY");
+                    holder.shippingStatus.setTextColor(colorR);
+                    holder.doneStatus.setText("DONE");
+                    holder.doneStatus.setTextColor(colorR);
+                    break;
+            }
         }
 
         @Override

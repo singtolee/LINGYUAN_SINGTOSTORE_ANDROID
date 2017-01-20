@@ -15,6 +15,7 @@
         android:layout_height="@dimen/threehunder"
         android:layout_alignParentBottom="true">
         <LinearLayout
+            android:id="@+id/buyNowFirstRow"
             android:clipChildren="false"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -30,31 +31,28 @@
                 android:adjustViewBounds="true" />
 
             <TextView
+                android:layout_marginTop="@dimen/tenMargin"
+                android:layout_marginStart="@dimen/tenMargin"
                 android:textSize="18sp"
-                android:padding="@dimen/twentyMargin"
-                android:text="@string/app_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/prdBigTitle" />
         </LinearLayout>
         <LinearLayout
-            android:layout_marginTop="50dp"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/buyNowFirstRow"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="100dp">
 
             <TextView
                 android:layout_gravity="center_vertical"
-                android:padding="@dimen/twentyMargin"
                 android:layout_marginLeft="@dimen/thirtyMargin"
-                android:text="@string/app_name"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/prdsmallCS" />
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/thirtyMargin"
+                android:layout_marginStart="@dimen/twentyMargin"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal"
                 android:background="@drawable/view_border"
@@ -86,8 +84,9 @@
                     android:id="@+id/qtyIncreaseBtn" />
             </LinearLayout>
             <TextView
-                android:text="(3 LEFT)"
                 android:layout_marginLeft="@dimen/tenMargin"
+                android:text="(10 LEFT)"
+                android:textSize="12sp"
                 android:textColor="@color/colorPrimary"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -99,7 +98,6 @@
             android:layout_marginBottom="110dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/thirtyMargin"
-            android:text="TO: LI XIN BEI 0917271197"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/namephone" />
@@ -108,7 +106,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/tenMargin"
             android:layout_marginLeft="@dimen/thirtyMargin"
-            android:text="ADDRESS: VILLAGGIO 44/181"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buildingroom" />
@@ -120,7 +117,6 @@
             <TextView
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:text="TOTOAL: THB 99.0"
                 android:textAlignment="center"
                 android:layout_weight="1"
                 android:layout_width="@dimen/zerodp"

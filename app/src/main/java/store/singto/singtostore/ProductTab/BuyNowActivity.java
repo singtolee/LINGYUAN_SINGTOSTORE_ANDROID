@@ -215,10 +215,10 @@ public class BuyNowActivity extends AppCompatActivity {
         qtyRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                String cqty = mutableData.getValue().toString();
-                if(cqty == null){
+                if(mutableData.getValue() == null){
                     return Transaction.success(mutableData);
                 }else {
+                    String cqty = mutableData.getValue().toString();
                     int cnum = Integer.parseInt(cqty);  //how many left
                     int amount = Integer.parseInt(qtyIndicator.getText().toString()); //amount to buy
                     int leftNum = cnum-amount;

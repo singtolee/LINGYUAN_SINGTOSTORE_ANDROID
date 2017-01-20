@@ -1,9 +1,13 @@
 package store.singto.singtostore.CartTab;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -23,14 +29,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import store.singto.singtostore.MeTab.EditUserFreeAddressActivity;
+import store.singto.singtostore.MeTab.FreeAddress;
 import store.singto.singtostore.ProductTab.CartPrd;
+import store.singto.singtostore.ProductTab.OrderPrd;
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +57,7 @@ import store.singto.singtostore.R;
 public class CartTabFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener stateListener;
-    private DatabaseReference reference;
+    private DatabaseReference reference,addressRef,allPrdRef;
     private ChildEventListener listener;
     private List<CartPrd> carts, ckCarts;
     private RecyclerView cartRV;
@@ -51,8 +65,15 @@ public class CartTabFragment extends Fragment {
 
     private LinearLayout bottomLL;
     private TextView totalPrice;
+    private Button checkAllOutBtn;
 
-    private String UID;
+    private String UID;  //
+
+    private FreeAddress address;
+
+    private boolean isLowQty = false;
+
+    private ProgressDialog progressDialog;
 
     public CartTabFragment() {
         // Required empty public constructor
@@ -63,8 +84,12 @@ public class CartTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_cart_tab, container, false);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage(getString(R.string.submitting));
         carts = new ArrayList<>();
         ckCarts = new ArrayList<>();
+        address = new FreeAddress();
+        addressRef = FirebaseDatabase.getInstance().getReference().child("FreeDeliveryAddresses");
         auth = FirebaseAuth.getInstance();
         stateListener = new FirebaseAuth.AuthStateListener(){
             @Override
@@ -92,6 +117,7 @@ public class CartTabFragment extends Fragment {
             }
         };
         reference = FirebaseDatabase.getInstance().getReference().child("users");
+        allPrdRef = FirebaseDatabase.getInstance().getReference().child("AllProduct");
         listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -142,6 +168,50 @@ public class CartTabFragment extends Fragment {
         bottomLL.setVisibility(View.INVISIBLE);
 
         totalPrice = (TextView) view.findViewById(R.id.cartTotolPrice);
+        checkAllOutBtn = (Button)view.findViewById(R.id.cartCheckBtn);
+        checkAllOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addressRef.child(UID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getValue()!=null){
+                            address = dataSnapshot.getValue(FreeAddress.class);
+                            String alertTitle = "Are you sure to make this order?";
+                            String alertMsg = "Deliever to: " + address.recipient + " ," + address.phone + " ," + address.roomNumber + " ," + address.officeBuilding;
+                            makeAlert(alertTitle, alertMsg);
+
+                        }else {
+                            //no address yet
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("No Address Yet");
+                            builder.setMessage("Please edit your address first").setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //go to edit address
+                                    Intent addreeIntent = new Intent(getContext(), EditUserFreeAddressActivity.class);
+                                    startActivity(addreeIntent);
+
+                                }
+                            }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
 
         auth.addAuthStateListener(stateListener);
 
@@ -355,4 +425,139 @@ public class CartTabFragment extends Fragment {
         }
 
     }
+
+    private void makeAlert(String title, String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(msg).setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //start to run Transaction check out
+                //List<CartPrd> myCarts = new ArrayList<>();
+                //display progress dialog
+                progressDialog.show();
+                ckCarts.clear();
+                for(CartPrd cc : carts){
+                    if(cc.Check){
+                        ckCarts.add(cc);
+                    }
+                }
+
+                int geshu = ckCarts.size();
+                isLowQty = false;
+                for(int i=0;i<geshu;i++){
+                    safeCheckout(ckCarts.get(i),i+1,geshu);
+                }
+
+            }
+        }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //do nothing at here
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void safeCheckout(final CartPrd prd, final int i, final int cishu){
+        allPrdRef.child(prd.prdKey).child("prodcutCSQty").child(Integer.toString(prd.ID)).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                if(mutableData.getValue()==null){
+                    return Transaction.success(mutableData);
+
+                }else {
+                    String cQty = mutableData.getValue().toString();
+                    int cnum = Integer.parseInt(cQty);
+                    int amount = prd.Qty;
+                    int leftNum = cnum - amount;
+                    if(leftNum>=0){
+                        mutableData.setValue(Integer.toString(leftNum));
+                        return Transaction.success(mutableData);
+                    }else {
+                        return Transaction.abort();
+                    }
+                }
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                if(databaseError!=null){
+                    //Transaction Error
+                    makeSimpleAlert("UNKNOWN ERROR", "Please Try Again.");
+                    return;
+                }else{
+                    //aobort or success
+                    if(b){
+                        //write to orders folder and remove from cart folder
+                        OrderPrd oprd = new OrderPrd();
+                        oprd.Qty = prd.Qty;
+                        oprd.cs = prd.prdCS;
+                        oprd.date = Tools.getDateOnly();
+                        oprd.prdKey = prd.prdKey;
+                        oprd.price = prd.prdPrice;
+                        oprd.selectedCSID = prd.ID;
+                        oprd.status = 0;
+                        oprd.time = Tools.getTimeOnly();
+                        oprd.title = prd.prdTitle;
+                        oprd.url = prd.prdImg;
+                        oprd.userKey = UID;
+                        String orderKey = addressRef.push().getKey();
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("/PUBLICORDERS/" + oprd.date + "/" + orderKey, oprd);
+                        childUpdates.put("/users/" + oprd.userKey + "/Orders/" + orderKey, oprd);
+                        //remove this prd from cart
+                        reference.child(UID).child("SHOPPINGCART").child(prd.cartKey).removeValue();
+                        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                //progressDialog.dismiss();
+                                if(task.isSuccessful()){
+                                    if(i==cishu){
+                                        progressDialog.dismiss();
+                                        if(isLowQty){
+                                            //some are low in stock
+                                            makeSimpleAlert("Low in Stock", "Some products are low in stock, please reduce the quantity or buy other products.");
+                                        }else {
+                                            //all check out
+                                            makeSimpleAlert("SUCCESS","Your order will arrive within 24 Hours, Check it at ORDERS.");
+                                        }
+                                    }
+                                }else {
+                                }
+                            }
+                        });
+                    }else {
+                        //this prd is low in stocl
+                        isLowQty = true;
+                        if(i==cishu){
+                            progressDialog.dismiss();
+                            //alert low qty message
+                            makeSimpleAlert("Low in Stock", "Some products are low in stock, please reduce the quantity or buy other product.");
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+
+    private void makeSimpleAlert(String title, String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(title);
+        builder.setMessage(msg).setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+
+
 }
