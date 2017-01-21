@@ -126,4 +126,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public void updateBadge(String s){
+        bottomBar.setNotification(s,2);
+    }
 }

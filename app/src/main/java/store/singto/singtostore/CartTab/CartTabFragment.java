@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import store.singto.singtostore.MainActivity;
 import store.singto.singtostore.MeTab.EditUserFreeAddressActivity;
 import store.singto.singtostore.MeTab.FreeAddress;
 import store.singto.singtostore.ProductTab.CartPrd;
@@ -399,6 +400,11 @@ public class CartTabFragment extends Fragment {
 
     private void updateBottomBar(){
         //TODO Badge update!!!
+        if(carts.size()>0){
+            ( (MainActivity)getActivity()).updateBadge(Integer.toString(carts.size()));
+        }else {
+            ( (MainActivity)getActivity()).updateBadge("");
+        }
         int item = 0;
         int total = 0;
         for(CartPrd cc : carts){
