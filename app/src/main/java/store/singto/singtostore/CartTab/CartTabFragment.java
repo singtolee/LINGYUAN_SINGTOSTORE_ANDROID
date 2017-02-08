@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -43,6 +45,7 @@ import store.singto.singtostore.MainActivity;
 import store.singto.singtostore.MeTab.EditUserFreeAddressActivity;
 import store.singto.singtostore.MeTab.FreeAddress;
 import store.singto.singtostore.ProductTab.CartPrd;
+import store.singto.singtostore.ProductTab.OneCategoryPrdFragment;
 import store.singto.singtostore.ProductTab.OrderPrd;
 import store.singto.singtostore.R;
 import store.singto.singtostore.Tools.Tools;
@@ -162,6 +165,7 @@ public class CartTabFragment extends Fragment {
         };
         cartRV = (RecyclerView) view.findViewById(R.id.cartRV);
         cartRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        cartRV.addItemDecoration(new Tools.CellItemDecoration(8));
         adapter = new CartAdapter(getContext(), carts);
         cartRV.setAdapter(adapter);
         //bottom bar
@@ -562,8 +566,4 @@ public class CartTabFragment extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-
-
-
 }

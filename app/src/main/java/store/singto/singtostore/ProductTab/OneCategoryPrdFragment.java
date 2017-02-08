@@ -25,6 +25,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +60,8 @@ public class OneCategoryPrdFragment extends Fragment {
         prds = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.shortPrdRecycleView);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        recyclerView.addItemDecoration(new SpacesItemDecoration(12));
+        //recyclerView.addItemDecoration(new SpacesItemDecoration(12));
+        recyclerView.addItemDecoration(new Tools.SpacesItemDecoration(12));
         adapter = new ShortPrdAdapter(getContext(),prds);
         adapter.setOnItemClickListener(new ShortPrdAdapter.OnItemClickListener() {
             @Override
@@ -179,24 +181,6 @@ public class OneCategoryPrdFragment extends Fragment {
         private OnItemClickListener itemClickListener;
         public void setOnItemClickListener(OnItemClickListener onItemClickListener){
             this.itemClickListener = onItemClickListener;
-        }
-
-    }
-
-    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private int space;
-
-        public SpacesItemDecoration(int space) {
-            this.space = space;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view,
-                                   RecyclerView parent, RecyclerView.State state) {
-            outRect.top = space;
-            outRect.left = space;
-            outRect.right = space/2;
-            outRect.bottom = space/2;
         }
     }
 }

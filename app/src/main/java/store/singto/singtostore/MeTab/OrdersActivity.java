@@ -28,6 +28,7 @@ import java.util.List;
 
 import store.singto.singtostore.ProductTab.OrderPrd;
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
 
 public class OrdersActivity extends AppCompatActivity {
 
@@ -49,6 +50,7 @@ public class OrdersActivity extends AppCompatActivity {
 
         orderRecyv = (RecyclerView)findViewById(R.id.ordersRecyv);
         orderRecyv.setLayoutManager(new LinearLayoutManager(this));
+        orderRecyv.addItemDecoration(new Tools.CellItemDecoration(8));
         adapter = new OrderAdapter(this,orders);
         orderRecyv.setAdapter(adapter);
 

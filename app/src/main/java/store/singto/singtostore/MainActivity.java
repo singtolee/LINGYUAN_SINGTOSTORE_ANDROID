@@ -18,7 +18,8 @@ import store.singto.singtostore.StoryTab.StoryTabFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Fragment storyFragment, productFragment, cartFragment, meFragment;
+    //private Fragment storyFragment, productFragment, cartFragment, meFragment;
+    private Fragment productFragment, cartFragment, meFragment;
     private AHBottomNavigation bottomBar;
 
 
@@ -30,12 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         bottomBar = (AHBottomNavigation) findViewById(R.id.bottomBar);
-        AHBottomNavigationItem story = new AHBottomNavigationItem(R.string.storyTab, R.drawable.ic_color_lens_white_24dp, R.color.colorPrimary);
+        //AHBottomNavigationItem story = new AHBottomNavigationItem(R.string.storyTab, R.drawable.ic_color_lens_white_24dp, R.color.colorPrimary);
         AHBottomNavigationItem prd = new AHBottomNavigationItem(R.string.prdTab, R.drawable.ic_local_offer_white_24dp, R.color.colorPrimary);
         AHBottomNavigationItem cart = new AHBottomNavigationItem(R.string.cartTab, R.drawable.ic_shopping_cart_white_24dp, R.color.colorPrimary);
         AHBottomNavigationItem me = new AHBottomNavigationItem(R.string.meTab, R.drawable.ic_account_box_white_24dp, R.color.colorPrimary);
 
-        bottomBar.addItem(story);
+       // bottomBar.addItem(story);
         bottomBar.addItem(prd);
         bottomBar.addItem(cart);
         bottomBar.addItem(me);
@@ -58,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         setFragment(2);
                         break;
-                    case 3:
-                        setFragment(3);
-                        break;
                 }
                 return true;
             }
@@ -74,14 +72,6 @@ public class MainActivity extends AppCompatActivity {
         hideAllFragment(transaction);
         switch (index) {
             case 0:
-                if (storyFragment == null) {
-                    storyFragment = new StoryTabFragment();
-                    transaction.add(R.id.main_container, storyFragment);
-                } else {
-                    transaction.show(storyFragment);
-                }
-                break;
-            case 1:
                 if (productFragment == null) {
                     productFragment = new ProductTabFragment();
                     transaction.add(R.id.main_container, productFragment);
@@ -89,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     transaction.show(productFragment);
                 }
                 break;
-            case 2:
+            case 1:
                 if (cartFragment == null) {
                     cartFragment = new CartTabFragment();
                     transaction.add(R.id.main_container, cartFragment);
@@ -97,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     transaction.show(cartFragment);
                 }
                 break;
-            case 3:
+            case 2:
                 if (meFragment == null) {
                     meFragment = new MeTabFragment();
                     transaction.add(R.id.main_container, meFragment);
@@ -112,9 +102,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hideAllFragment(FragmentTransaction transaction){
-        if (storyFragment != null) {
-            transaction.hide(storyFragment);
-        }
         if (productFragment != null) {
             transaction.hide(productFragment);
         }
@@ -128,6 +115,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateBadge(String s){
-        bottomBar.setNotification(s,2);
+        bottomBar.setNotification(s,1);
     }
 }
