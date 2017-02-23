@@ -131,6 +131,8 @@ public class StoryTabFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        popularPrds.clear();
+        adapter.notifyDataSetChanged();
         //Query query = ref.orderByChild("viewCount");
         query.addChildEventListener(listener);
         //ref.addChildEventListener(listener);
@@ -141,5 +143,7 @@ public class StoryTabFragment extends Fragment {
         super.onStop();
         //ref.removeEventListener(listener);
         query.removeEventListener(listener);
+        popularPrds.clear();
+        adapter.notifyDataSetChanged();
     }
 }

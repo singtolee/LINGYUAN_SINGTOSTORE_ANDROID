@@ -19,6 +19,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -42,7 +44,7 @@ public class OneCategoryPrdFragment extends Fragment {
     private ShortPrdAdapter adapter;
     private AVLoadingIndicatorView indicatorView;
 
-    private DatabaseReference reference;
+    private DatabaseReference reference,viewCountRef;
     private ChildEventListener listener;
 
     public OneCategoryPrdFragment() {
@@ -56,6 +58,7 @@ public class OneCategoryPrdFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_one_category_prd, container, false);
         indicatorView = (AVLoadingIndicatorView) view.findViewById(R.id.shortPrdLoadingIndicator);
         reference = FirebaseDatabase.getInstance().getReference().child("Each_Category").child(category);
+        viewCountRef = FirebaseDatabase.getInstance().getReference().child("AllProduct");
         prds = new ArrayList<>();
         recyclerView = (RecyclerView) view.findViewById(R.id.shortPrdRecycleView);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
@@ -63,10 +66,33 @@ public class OneCategoryPrdFragment extends Fragment {
         adapter = new ShortPrdAdapter(getContext(),prds);
         adapter.setOnItemClickListener(new ShortPrdAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int index) {
-                Intent intent = new Intent(getActivity(), DetailPrdActivity.class);
-                intent.putExtra("prdKey", prds.get(index).prdKey);
-                startActivity(intent);
+            public void onItemClick(View view, final int index) {
+                //add one view count with transication
+                viewCountRef.child(prds.get(index).prdKey).child("viewCount").runTransaction(new Transaction.Handler() {
+                    @Override
+                    public Transaction.Result doTransaction(MutableData mutableData) {
+                        if(mutableData.getValue() == null){
+                            return Transaction.success(mutableData);
+                        }else {
+                            String scnum = mutableData.getValue().toString();
+                            int cnum = Integer.parseInt(scnum);
+                            cnum = cnum + 1;
+                            mutableData.setValue(cnum);
+                            return  Transaction.success(mutableData);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                        if(b){
+                            Intent intent = new Intent(getActivity(), DetailPrdActivity.class);
+                            intent.putExtra("prdKey", prds.get(index).prdKey);
+                            startActivity(intent);
+                        }else {
+                            System.out.println(databaseError.getDetails());
+                        }
+                    }
+                });
             }
         });
         recyclerView.setAdapter(adapter);
