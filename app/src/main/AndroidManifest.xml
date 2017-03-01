@@ -17,28 +17,46 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".SplashScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
-        <activity android:name=".LoginRegister.LoginActivity" />
-        <activity android:name=".LoginRegister.RegisterActivity" />
-        <activity android:name=".LoginRegister.PasswordResetAvtivity" />
-        <activity android:name=".MeTab.UserProfileActivity" />
-        <activity android:name=".MeTab.EditUserNameActivity" />
-        <activity android:name=".MeTab.EditUserPhoneActivity" />
-        <activity android:name=".MeTab.EditUserAvatarActivity" />
-        <activity android:name=".ProductTab.DetailPrdActivity" />
-        <activity android:name=".MeTab.EditUserFreeAddressActivity" />
-        <activity android:name=".MeTab.FavoritePrdActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginRegister.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginRegister.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginRegister.PasswordResetAvtivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MeTab.UserProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MeTab.EditUserNameActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MeTab.EditUserPhoneActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MeTab.EditUserAvatarActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ProductTab.DetailPrdActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MeTab.EditUserFreeAddressActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MeTab.FavoritePrdActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ProductTab.BuyNowActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Transparent" />
-        <activity android:name=".MeTab.OrdersActivity"></activity>
+        <activity android:name=".MeTab.OrdersActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
