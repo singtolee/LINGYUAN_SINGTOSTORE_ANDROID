@@ -161,6 +161,7 @@ public class CartTabFragment extends Fragment {
             }
         };
         cartRV = (RecyclerView) view.findViewById(R.id.cartRV);
+        cartRV.addItemDecoration(new Tools.RecyPadding(0,6,4,6));
         cartRV.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CartAdapter(getContext(), carts);
         cartRV.setAdapter(adapter);

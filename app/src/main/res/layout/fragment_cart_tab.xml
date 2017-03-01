@@ -8,8 +8,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/fiftydp"
         android:paddingTop="@dimen/fourdp"
-        android:paddingLeft="@dimen/tenMargin"
-        android:paddingRight="@dimen/tenMargin"
         android:id="@+id/cartRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

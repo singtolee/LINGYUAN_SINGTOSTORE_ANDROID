@@ -1,6 +1,9 @@
 package store.singto.singtostore.Tools;
+import android.graphics.Rect;
 import android.icu.text.DateFormat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Patterns;
+import android.view.View;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,5 +32,25 @@ public class Tools {
         Date date = new Date();
         return format.format(date);
 
+    }
+
+    public static class RecyPadding extends RecyclerView.ItemDecoration {
+        private int topPadding, rightPadding, bottomPadding, leftPadding;
+
+        public RecyPadding(int top, int right, int bottom, int left) {
+            this.topPadding = top;
+            this.rightPadding = right;
+            this.bottomPadding = bottom;
+            this.leftPadding = left;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+            outRect.top = topPadding;
+            outRect.left = leftPadding;
+            outRect.right = rightPadding;
+            outRect.bottom = bottomPadding;
+        }
     }
 }

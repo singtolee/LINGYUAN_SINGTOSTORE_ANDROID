@@ -29,6 +29,8 @@ import java.util.List;
 
 import store.singto.singtostore.ProductTab.DetailPrdActivity;
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
+
 
 public class FavoritePrdActivity extends AppCompatActivity {
     private RecyclerView favoritePrdRcyv;
@@ -107,6 +109,7 @@ public class FavoritePrdActivity extends AppCompatActivity {
         prdRef = FirebaseDatabase.getInstance().getReference().child("AllProduct");
         favoritePrdRcyv = (RecyclerView)findViewById(R.id.favoritePrd_Rcyv);
         favoritePrdRcyv.setLayoutManager(new LinearLayoutManager(this));
+        favoritePrdRcyv.addItemDecoration(new Tools.RecyPadding(0,6,4,6));
         adapter = new FavAdapter(this,favs);
         adapter.setOnItemClickListener(new FavAdapter.OnItemClickListener() {
             @Override

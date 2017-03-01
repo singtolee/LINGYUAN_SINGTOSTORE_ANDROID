@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import store.singto.singtostore.R;
+import store.singto.singtostore.Tools.Tools;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +52,7 @@ public class StoryTabFragment extends Fragment {
         query = ref.orderByChild("viewCount");
         popularPrds = new ArrayList<>();
         popularRV = (RecyclerView) view.findViewById(R.id.popularPrdRecyclerView);
+        popularRV.addItemDecoration(new Tools.RecyPadding(0,0,4,0));
         popularRV.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PopularAdapter(getContext(),popularPrds);
         popularRV.setAdapter(adapter);
